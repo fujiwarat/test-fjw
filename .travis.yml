@@ -1,6 +1,8 @@
 language: c
 compiler: gcc
 os: linux
+# Require gettext-0.19.8
+dist: focal
 jobs:
   include:
   - name: "amd64"
