@@ -1,14 +1,16 @@
-language: python
+language: c
+compiler: gcc
+os: linux
 jobs:
   include:
-  - name: "test1"
-    python: "3.5"
-    env: TEST_SUITE="suite_test1"
-  - name: "test2"
-    python: "3.5"
-    env: TEST_SUITE="suite_test2"
-  - name: "test3"
-    python: "3.5"
-    env: TEST_SUITE="suite_test3"
-script: env TEST_SUITE=$TEST_SUITE ./test.py
-
+  - name: "amd64"
+    arch: amd64
+  - name: "ppc64le"
+    arch: ppc64le
+  - name: "s390x"
+    arch: s390x
+  - name: "arm64"
+    arch: arm64
+script:
+  - pwd
+  - ls -a
