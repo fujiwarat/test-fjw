@@ -15,6 +15,7 @@ addons:
   apt:
     packages:
     - gnome-common
+    - gtk-doc-tools
 script:
   - git clone git://github.com/ibus/ibus.git
   - cd ibus
