@@ -16,8 +16,29 @@ jobs:
 addons:
   apt:
     packages:
+    # For autogen.sh
     - gnome-common
     - gtk-doc-tools
+    # For make from
+    # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
+    - autoconf
+    - automake
+    - autotools-dev
+    - desktop-file-utils
+    - gobject-introspection
+    - iso-codes
+    - libdbus-glib-1-dev
+    - libdconf-dev
+    - libgirepository1.0-dev
+    - libglib2.0-dev
+    - libgtk-3-dev
+    - libgtk2.0-dev
+    - libnotify-dev
+    - libtool
+    - python-gi-dev
+    - python3-all
+    - python3-dbus
+    - valac
 script:
   - git clone git://github.com/ibus/ibus.git
   - cd ibus
