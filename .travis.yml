@@ -5,12 +5,13 @@ jobs:
   include:
   - name: "amd64"
     arch: amd64
-  - name: "ppc64le"
-    arch: ppc64le
-  - name: "s390x"
-    arch: s390x
-  - name: "arm64"
-    arch: arm64
+  #- name: "ppc64le"
+  #  arch: ppc64le
+  #- name: "s390x"
+  #  arch: s390x
+  #- name: "arm64"
+  #  arch: arm64
 script:
-  - pwd
-  - ls -a
+  - git clone git://github.com/ibus/ibus.git
+  - cd ibus
+  - ./autogen.sh
