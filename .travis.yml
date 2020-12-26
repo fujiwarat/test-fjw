@@ -45,3 +45,4 @@ jobs:
     - >
       ./autogen.sh
       --with-ucd-dir='/usr/share/unicode'
+    - make distcheck
