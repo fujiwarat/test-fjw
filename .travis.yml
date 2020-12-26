@@ -3,16 +3,11 @@ compiler: gcc
 os: linux
 # Require gettext-0.19.8
 dist: focal
-jobs:
-  include:
-  - name: "amd64"
-    arch: amd64
-  #- name: "ppc64le"
-  #  arch: ppc64le
-  #- name: "s390x"
-  #  arch: s390x
-  #- name: "arm64"
-  #  arch: arm64
+arch:
+  - amd64
+  #- ppc64le
+  #- s390x
+  #- arm64
 addons:
   apt:
     packages:
@@ -37,10 +32,16 @@ addons:
     - unicode-cldr-core
     - unicode-data
     - valac
-script:
-  - git clone git://github.com/ibus/ibus.git
-  - cd ibus
-  # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
-  - ./autogen.sh \
-    --with-ucd-dir='/usr/share/unicode' \
-    ${NULL}
+jobs:
+  include:
+  - name: Build
+    before_script:
+    - sudo apt-get -qq update
+    script:
+    - set -e
+    - git clone git://github.com/ibus/ibus.git
+    - cd ibus
+    # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
+    - >
+      ./autogen.sh
+      --with-ucd-dir='/usr/share/unicode'
