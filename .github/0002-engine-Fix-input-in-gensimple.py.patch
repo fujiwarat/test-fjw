@@ -1,0 +1,45 @@
+From 29959e1d2521781c544879b284e03812a2a11b2e Mon Sep 17 00:00:00 2001
+From: fujiwarat <takao.fujiwara1@gmail.com>
+Date: Thu, 31 Dec 2020 20:00:02 +0900
+Subject: [PATCH] engine: Fix input in gensimple.py
+
+Replace datarootdir with XKBCONFIG_BASE.
+---
+ configure.ac       | 7 +++++++
+ engine/Makefile.am | 2 +-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 5753057b..9ed5cb66 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -720,6 +720,13 @@ PKG_CHECK_MODULES(ISOCODES, [
+ ISOCODES_PREFIX=`$PKG_CONFIG iso-codes --variable=prefix`
+ AC_SUBST(ISOCODES_PREFIX)
+ 
++PKG_CHECK_MODULES(XKBCONFIG,
++    [xkeyboard-config],
++    [XKBCONFIG_BASE=`$PKG_CONFIG xkeyboard-config --variable=xkb_base`],
++    [XKBCONFIG_BASE='$(datarootdir)/X11/xkb']
++)
++AC_SUBST(XKBCONFIG_BASE)
++
+ AC_SUBST([GDBUS_CODEGEN], [`$PKG_CONFIG --variable gdbus_codegen gio-2.0`])
+ 
+ # OUTPUT files
+diff --git a/engine/Makefile.am b/engine/Makefile.am
+index 1944c02b..84bc7f6c 100644
+--- a/engine/Makefile.am
++++ b/engine/Makefile.am
+@@ -100,7 +100,7 @@ simple.xml: simple.xml.in
+ 
+ simple.xml.in:
+ 	$(srcdir)/gensimple.py \
+-	    --input=$(datarootdir)/X11/xkb/rules/evdev.xml \
++	    --input=$(XKBCONFIG_BASE)/rules/evdev.xml \
+ 	    --output=$@ \
+ 	    --version=$(VERSION).`date '+%Y%m%d'` \
+ 	    --exec-path=@libexecdir\@/ibus-engine-simple \
+-- 
+2.28.0
+

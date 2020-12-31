@@ -42,6 +42,7 @@ jobs:
     - git clone git://github.com/ibus/ibus.git
     - cd ibus
     - patch -p1 < ../.github/0001-engine-Fix-iso-path-in-gensimple.py.patch
+    - patch -p1 < ../.github/0002-engine-Fix-input-in-gensimple.py.patch
     # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
     - >
       ./autogen.sh
