@@ -47,4 +47,11 @@ jobs:
     - >
       ./autogen.sh
       --with-ucd-dir='/usr/share/unicode'
-    - make distcheck
+    - >
+      make distcheck
+      DISTCHECK_CONFIGURE_FLAGS="
+      --enable-gtk-doc
+      --disable-schemas-install
+      --enable-memconf
+      --with-ucd-dir='/usr/share/unicode'
+      "
