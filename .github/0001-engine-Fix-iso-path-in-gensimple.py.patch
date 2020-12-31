@@ -1,0 +1,26 @@
+From 5d68b00e0464d43ba2f77697f9dcfbff78d7b438 Mon Sep 17 00:00:00 2001
+From: fujiwarat <takao.fujiwara1@gmail.com>
+Date: Thu, 31 Dec 2020 17:28:45 +0900
+Subject: [PATCH] engine: Fix iso-path in gensimple.py
+
+Replace datarootdir with ISOCODES_PREFIX.
+---
+ engine/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/engine/Makefile.am b/engine/Makefile.am
+index d810704b..1944c02b 100644
+--- a/engine/Makefile.am
++++ b/engine/Makefile.am
+@@ -104,7 +104,7 @@ simple.xml.in:
+ 	    --output=$@ \
+ 	    --version=$(VERSION).`date '+%Y%m%d'` \
+ 	    --exec-path=@libexecdir\@/ibus-engine-simple \
+-	    --iso-path=$(datarootdir)/xml/iso-codes/iso_639.xml \
++	    --iso-path=$(ISOCODES_PREFIX)/share/xml/iso-codes/iso_639.xml \
+ 	    --first-language \
+ 	$(NULL)
+ 
+-- 
+2.28.0
+
