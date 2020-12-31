@@ -1,16 +1,20 @@
 language: c
 compiler: gcc
 os: linux
+
 # Require gettext-0.19.8
 dist: focal
+
 branches:
   only:
   - master
+
 arch:
   - amd64
   #- ppc64le
   #- s390x
   #- arm64
+
 addons:
   apt:
     packages:
@@ -35,6 +39,7 @@ addons:
     - unicode-cldr-core
     - unicode-data
     - valac
+
 jobs:
   include:
   - name: Build
@@ -45,6 +50,7 @@ jobs:
     - git pull --depth=200
     - git clone git://github.com/ibus/ibus.git
     - cd ibus
+    # configure options from
     # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
     - >
       ./autogen.sh
