@@ -3,12 +3,9 @@ compiler: gcc
 os: linux
 # Require gettext-0.19.8
 dist: focal
-if: branch = master
-arch:
-  - amd64
-  - ppc64le
-  - s390x
-  - arm64
+branches:
+  only:
+  - master
 addons:
   apt:
     packages:
@@ -35,30 +32,37 @@ addons:
     - valac
 jobs:
   include:
-  - name: Build
-    before_script:
-    - sudo apt-get -qq update
-    script:
-    - set -e
-    - git clone git://github.com/ibus/ibus.git
-    - cd ibus
-    - patch -p1 < ../.github/0001-engine-Fix-iso-path-in-gensimple.py.patch
-    - patch -p1 < ../.github/0002-engine-Fix-input-in-gensimple.py.patch
-    # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
-    - >
-      ./autogen.sh
-      --with-ucd-dir='/usr/share/unicode'
-    # Set the cutom DESTDIR because the default DESTDIR
-    # /home/travis/bulid/fujiwarat/$PKG/ibus/ibus-$VERSION/_inst seems to be
-    # too long and failed to set DESTDIR to install bindings/pygobject/IBus.py
-    - >
-      make distcheck
-      DISTCHECK_CONFIGURE_FLAGS="
-      --enable-gtk-doc
-      --disable-schemas-install
-      --enable-memconf
-      --with-ucd-dir='/usr/share/unicode'
-      "
-      DISABLE_GUI_TESTS="ibus-compose ibus-keypress test-stress"
-      VERBOSE=1
-      DESTDIR="$HOME/build/$USER/dest"
+  - name: amd64
+    arch: amd64
+  - name: ppc64le
+    arch: ppc64le
+  - name: s390x
+    arch: s390x
+  - name: arm64
+    arch: arm64
+before_script:
+- sudo apt-get -qq update
+script:
+- set -e
+- git clone git://github.com/ibus/ibus.git
+- cd ibus
+- patch -p1 < ../.github/0001-engine-Fix-iso-path-in-gensimple.py.patch
+- patch -p1 < ../.github/0002-engine-Fix-input-in-gensimple.py.patch
+# https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
+- >
+  ./autogen.sh
+  --with-ucd-dir='/usr/share/unicode'
+# Set the cutom DESTDIR because the default DESTDIR
+# /home/travis/bulid/fujiwarat/$PKG/ibus/ibus-$VERSION/_inst seems to be
+# too long and failed to set DESTDIR to install bindings/pygobject/IBus.py
+- >
+  make distcheck
+  DISTCHECK_CONFIGURE_FLAGS="
+  --enable-gtk-doc
+  --disable-schemas-install
+  --enable-memconf
+  --with-ucd-dir='/usr/share/unicode'
+  "
+  DISABLE_GUI_TESTS="ibus-compose ibus-keypress test-stress"
+  VERBOSE=1
+  DESTDIR="$HOME/build/$USER/dest"
