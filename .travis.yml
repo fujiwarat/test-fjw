@@ -55,3 +55,5 @@ jobs:
       --enable-memconf
       --with-ucd-dir='/usr/share/unicode'
       "
+      DISABLE_GUI_TESTS="ibus-compose ibus-keypress test-stress"
+      VERBOSE=1
