@@ -6,9 +6,9 @@ dist: focal
 if: branch = master
 arch:
   - amd64
-  #- ppc64le
-  #- s390x
-  #- arm64
+  - ppc64le
+  - s390x
+  - arm64
 addons:
   apt:
     packages:
