@@ -3,7 +3,9 @@ compiler: gcc
 os: linux
 # Require gettext-0.19.8
 dist: focal
-if: branch = master
+branches:
+  only:
+  - master
 arch:
   - amd64
   #- ppc64le
