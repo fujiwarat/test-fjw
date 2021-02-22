@@ -55,6 +55,7 @@ jobs:
     - >
       ./autogen.sh
       --with-ucd-dir='/usr/share/unicode'
+      --enable-gtk4
     # Set the cutom DESTDIR because the default DESTDIR
     # /home/travis/bulid/fujiwarat/$PKG/ibus/ibus-$VERSION/_inst seems to be
     # too long and failed to set DESTDIR to install bindings/pygobject/IBus.py
@@ -65,6 +66,7 @@ jobs:
       --disable-schemas-install
       --enable-memconf
       --with-ucd-dir='/usr/share/unicode'
+      --enable-gtk4
       "
       DISABLE_GUI_TESTS="ibus-compose ibus-keypress test-stress"
       VERBOSE=1
