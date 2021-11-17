@@ -41,7 +41,7 @@ jobs:
     script:
     - set -e
     - git pull --depth=200
-    - git clone --depth=10 git://github.com/fujiwarat/ibus-anthy.git
+    - git clone --depth=300 git://github.com/fujiwarat/ibus-anthy.git
     - cd ibus-anthy
     - env GIT_PAGER=cat git config -l
     - git pull --depth=200
