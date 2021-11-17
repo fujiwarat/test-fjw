@@ -48,8 +48,9 @@ jobs:
     script:
     - set -e
     - git pull --depth=200
-    - git clone git://github.com/ibus/ibus.git
+    - git clone --depth=10 git://github.com/ibus/ibus.git
     - cd ibus
+    - git pull --depth=200
     # configure options from
     # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
     - >

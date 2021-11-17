@@ -41,8 +41,9 @@ jobs:
     script:
     - set -e
     - git pull --depth=200
-    - git clone git://github.com/fujiwarat/ibus-anthy.git
+    - git clone --depth=10 git://github.com/fujiwarat/ibus-anthy.git
     - cd ibus-anthy
+    - git pull --depth=200
     # configure options from
     # https://salsa.debian.org/debian/ibus-anthy/-/blob/master/debian/rules
     - >
