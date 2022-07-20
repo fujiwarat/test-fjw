@@ -48,7 +48,7 @@ jobs:
     script:
     - set -e
     - git pull --depth=200
-    - git clone --depth=10 git://github.com/ibus/ibus.git
+    - git clone --depth=300 https://github.com/ibus/ibus.git
     - cd ibus
     - git pull --depth=200
     # configure options from
