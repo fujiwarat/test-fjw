@@ -9,7 +9,9 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  inputs:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
           packages: |
             # For autogen.sh
             autopoint
@@ -33,8 +35,6 @@ on:
             unicode-cldr-core
             unicode-data
             valac
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
 
 # A workflow run is made up of jobs that can run sequentially or in parallel
 jobs:
@@ -57,7 +57,7 @@ jobs:
       - name: Initialize
         run: |
           sudo apt-get -qq update
-          echo "${{ inputs.packages }}"
+          echo '${{ inputs.packages }}'
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
