@@ -9,7 +9,30 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
+  inputs:
+          packages: |
+            # For autogen.sh
+            autopoint
+            # For make from
+            # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
+            desktop-file-utils
+            gobject-introspection
+            gtk-doc-tools
+            iso-codes
+            libdconf-dev
+            libgirepository1.0-dev
+            libglib2.0-dev
+            libgtk-3-bin
+            libgtk-3-dev
+            libgtk2.0-dev
+            libnotify-dev
+            libtool
+            libwayland-dev
+            python-gi-dev
+            python3-all
+            unicode-cldr-core
+            unicode-data
+            valac
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -35,30 +58,6 @@ jobs:
         run: |
           sudo apt-get -qq update
           echo "${{ inputs.packages }}"
-        with:
-          packages: |
-            # For autogen.sh
-            autopoint
-            # For make from
-            # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
-            desktop-file-utils
-            gobject-introspection
-            gtk-doc-tools
-            iso-codes
-            libdconf-dev
-            libgirepository1.0-dev
-            libglib2.0-dev
-            libgtk-3-bin
-            libgtk-3-dev
-            libgtk2.0-dev
-            libnotify-dev
-            libtool
-            libwayland-dev
-            python-gi-dev
-            python3-all
-            unicode-cldr-core
-            unicode-data
-            valac
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
