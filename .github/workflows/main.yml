@@ -60,7 +60,7 @@ jobs:
       - name: Initialize
         run: |
           sudo apt-get -qq update
-          echo '${{ inputs.packages }}'
+          echo '${{ github.event.inputs.packages }}'
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
