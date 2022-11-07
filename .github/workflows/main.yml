@@ -11,33 +11,6 @@ on:
     branches: [ main ]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    inputs:
-      packages:
-        description: 'Additional packages'
-        required: true
-        default: |
-            # For autogen.sh
-            autopoint
-            # For make from
-            # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
-            desktop-file-utils
-            gobject-introspection
-            gtk-doc-tools
-            iso-codes
-            libdconf-dev
-            libgirepository1.0-dev
-            libglib2.0-dev
-            libgtk-3-bin
-            libgtk-3-dev
-            libgtk2.0-dev
-            libnotify-dev
-            libtool
-            libwayland-dev
-            python-gi-dev
-            python3-all
-            unicode-cldr-core
-            unicode-data
-            valac
 
 # A workflow run is made up of jobs that can run sequentially or in parallel
 jobs:
@@ -60,7 +33,32 @@ jobs:
       - name: Initialize
         run: |
           sudo apt-get -qq update
-          echo '${{ github.event.inputs.packages }}'
+          echo "$INPUT_PACKAGES"
+          #echo '${{ github.event.inputs.packages }}'
+        with:
+         packages: |
+            # For autogen.sh
+            autopoint
+            # For make from
+            # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
+            desktop-file-utils
+            gobject-introspection
+            gtk-doc-tools
+            iso-codes
+            libdconf-dev
+            libgirepository1.0-dev
+            libglib2.0-dev
+            libgtk-3-bin
+            libgtk-3-dev
+            libgtk2.0-dev
+            libnotify-dev
+            libtool
+            libwayland-dev
+            python-gi-dev
+            python3-all
+            unicode-cldr-core
+            unicode-data
+            valac
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
