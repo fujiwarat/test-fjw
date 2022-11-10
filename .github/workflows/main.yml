@@ -70,8 +70,11 @@ jobs:
          # - valac
 
       - name: Initialize
+        env:
+            PACKAGES: "autopoint, desktop-file-utils"
         run: |
           sudo apt-get -qq update
+          echo ${{ env.PACKAGES }}
           echo ${{ inputs.packages }}
           #echo '${{ steps.packages.outputs.stringArray }}'
           #echo "$INPUTS_PACKAGES"
