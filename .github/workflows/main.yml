@@ -30,13 +30,11 @@ jobs:
           fetch-depth: 200
 
       # Runs a single command using the runners shell
-      - name: Initialize
-        run: |
-          sudo apt-get -qq update
-          echo "$INPUTS_PACKAGES"
-          #echo '${{ matrix.packages }}'
+      - name: Prepare required packges
+        id: packages
+        uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
         with:
-         packages:
+         stringArray:
           # For autogen.sh
           - autopoint
           # For make from
@@ -59,6 +57,13 @@ jobs:
           - unicode-cldr-core
           - unicode-data
           - valac
+
+      - name: Initialize
+        id: initialize
+        run: |
+          sudo apt-get -qq update
+          echo '${{ steps.packages.outputs.stringList }}'
+          #echo "$INPUTS_PACKAGES"
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
