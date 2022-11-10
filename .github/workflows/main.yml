@@ -44,7 +44,10 @@ jobs:
         #  #echo "$INPUTS_PACKAGES"
         with:
          #packages: "autopoint, desktop-file-utils"
-         stringArray: '["autopoint", "desktop-file-utils"]'
+         stringArray: 
+         - "autopoint"
+         - "desktop-file-utils"
+         #stringArray: '["autopoint", "desktop-file-utils"]'
          #stringArray:
          # # For autogen.sh
          # - autopoint
@@ -76,7 +79,7 @@ jobs:
           sudo apt-get -qq update
           echo ${{ env.PACKAGES }}
           echo ${{ inputs.packages }}
-          echo ${{ steps.packages.outputs.stringList }}
+          echo "${{ steps.packages.outputs.stringList }}"
           #echo "$INPUTS_PACKAGES"
 
       # Runs a set of commands using the runners shell
