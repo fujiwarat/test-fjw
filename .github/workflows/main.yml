@@ -44,7 +44,7 @@ jobs:
         #  #echo "$INPUTS_PACKAGES"
         with:
          #packages: "autopoint, desktop-file-utils"
-         stringArray: ["autopoint", "desktop-file-utils"]
+         stringArray: '["autopoint", "desktop-file-utils"]'
          #stringArray:
          # # For autogen.sh
          # - autopoint
