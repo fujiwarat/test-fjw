@@ -15,7 +15,7 @@ on:
       packages:
         description: "Additional package list"
         type: string
-        default: 'autopoint, desktop-file-utils'
+        default: "autopoint, desktop-file-utils"
 
 # A workflow run is made up of jobs that can run sequentially or in parallel
 jobs:
@@ -38,7 +38,7 @@ jobs:
       - name: Prepare required packges
         #id: packages
         #uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
-        with:
+        #with:
          #stringArray: '["autopoint", "desktop-file-utils"]'
          #stringArray:
          # # For autogen.sh
