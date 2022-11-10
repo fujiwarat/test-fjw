@@ -11,6 +11,13 @@ on:
     branches: [ main ]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      packages:
+        required: true
+        type: string
+        default:
+        - autopoint
+        - desktop-file-utils
 
 # A workflow run is made up of jobs that can run sequentially or in parallel
 jobs:
@@ -31,12 +38,9 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Prepare required packges
-        id: packages
+        #id: packages
         #uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
         with:
-         stringArray:
-           - autopoint
-           - desktop-file-utils
          #stringArray: '["autopoint", "desktop-file-utils"]'
          #stringArray:
          # # For autogen.sh
@@ -65,7 +69,8 @@ jobs:
       - name: Initialize
         run: |
           sudo apt-get -qq update
-          echo '${{ steps.packages.outputs.stringArray }}'
+          echo '${{ inputs.packages }}'
+          #echo '${{ steps.packages.outputs.stringArray }}'
           #echo "$INPUTS_PACKAGES"
 
       # Runs a set of commands using the runners shell
