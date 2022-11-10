@@ -71,7 +71,9 @@ jobs:
 
       - name: Initialize
         env:
-            PACKAGES: "autopoint, desktop-file-utils"
+            PACKAGES:
+            - autopoint
+            - desktop-file-utils
         run: |
           sudo apt-get -qq update
           echo ${{ env.PACKAGES }}
