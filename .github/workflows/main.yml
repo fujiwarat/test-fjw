@@ -34,7 +34,10 @@ jobs:
         id: packages
         uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
         with:
-         stringArray: '["autopoint", "desktop-file-utils"]'
+         stringArray:
+           - "autopoint"
+           - "desktop-file-utils"
+         #stringArray: '["autopoint", "desktop-file-utils"]'
          #stringArray:
          # # For autogen.sh
          # - autopoint
