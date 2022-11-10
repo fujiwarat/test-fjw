@@ -67,7 +67,7 @@ jobs:
       - name: Initialize
         run: |
           sudo apt-get -qq update
-          echo '${{ github.event.inputs.packages }}'
+          echo '${{ inputs.packages }}'
           #echo '${{ steps.packages.outputs.stringArray }}'
           #echo "$INPUTS_PACKAGES"
 
