@@ -74,15 +74,18 @@ jobs:
 
       - name: Initialize
         env:
-            #PACKAGES: autopoint desktop-file-utils
-            PACKAGES: >
-              autopoint
-              # For make from
-              desktop-file-utils
-              gobject-introspection
+         #PACKAGES: autopoint desktop-file-utils
+         # For autogen.sh
+         PACKAGES_AUTOGEN: >
+           autopoint
+         # For make from
+         # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
+         PACKAGES_MAKE: >
+           desktop-file-utils
+           gobject-introspection
         run: |
           sudo apt-get -qq update
-          echo ${{ env.PACKAGES }}
+          echo ${{ env.PACKAGES_AUTOGEN }} ${{ env.PACKAGES_MAKE }}
           echo ${{ inputs.packages }}
           echo "${{ steps.packages.outputs.stringList }}"
           #echo "$INPUTS_PACKAGES"
