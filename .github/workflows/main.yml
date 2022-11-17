@@ -102,10 +102,10 @@ jobs:
         run: |
           echo "## apt-get -qq update"
           sudo apt-get -qq update
-          echo "## apt install -y $(tr -d ${{ env.PACKAGES_AUTOGEN }})"
-          sudo apt install -y $(tr -d ${{ env.PACKAGES_AUTOGEN }})
-          echo "## apt install -y $(tr -d ${{ env.PACKAGES_MAKE }})"
-          sudo apt install -y $(tr -d ${{ env.PACKAGES_MAKE }})
+          echo ## apt install -y $(tr -d "${{ env.PACKAGES_AUTOGEN }}")
+          sudo apt install -y $(tr -d "${{ env.PACKAGES_AUTOGEN }}")
+          echo ## apt install -y $(tr -d "${{ env.PACKAGES_MAKE }}")
+          sudo apt install -y $(tr -d "${{ env.PACKAGES_MAKE }}")
           echo ${{ inputs.packages }}
           echo "${{ steps.packages.outputs.stringList }}"
           #echo "$INPUTS_PACKAGES"
