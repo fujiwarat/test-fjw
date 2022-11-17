@@ -83,9 +83,28 @@ jobs:
          PACKAGES_MAKE: >
            desktop-file-utils
            gobject-introspection
+           gtk-doc-tools
+           iso-codes
+           libdconf-dev
+           libgirepository1.0-dev
+           libglib2.0-dev
+           libgtk-3-bin
+           libgtk-3-dev
+           libgtk2.0-dev
+           libnotify-dev
+           libtool
+           libwayland-dev
+           python-gi-dev
+           python3-all
+           unicode-cldr-core
+           unicode-data
+           valac
         run: |
+          echo "## apt-get -qq update"
           sudo apt-get -qq update
+          echo "## apt install -y ${{ env.PACKAGES_AUTOGEN }}"
           sudo apt install -y ${{ env.PACKAGES_AUTOGEN }}
+          echo "## apt install -y ${{ env.PACKAGES_MAKE }}"
           sudo apt install -y ${{ env.PACKAGES_MAKE }}
           echo ${{ inputs.packages }}
           echo "${{ steps.packages.outputs.stringList }}"
