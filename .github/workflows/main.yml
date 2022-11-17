@@ -105,6 +105,7 @@ jobs:
           PACKAGES=$(echo "${{ env.PACKAGES_AUTOGEN }} ${{ env.PACKAGES_MAKE }}" | tr -d '\n')
           echo "## apt install -y $PACKAGES"
           sudo apt install -y $PACKAGES
+          dpkg -p unicode-data
           echo ${{ inputs.packages }}
           echo "${{ steps.packages.outputs.stringList }}"
           #echo "$INPUTS_PACKAGES"
