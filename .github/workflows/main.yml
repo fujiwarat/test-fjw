@@ -85,7 +85,8 @@ jobs:
            gobject-introspection
         run: |
           sudo apt-get -qq update
-          echo ${{ env.PACKAGES_AUTOGEN }} ${{ env.PACKAGES_MAKE }}
+          echo ${{ env.PACKAGES_AUTOGEN }}
+          echo ${{ env.PACKAGES_MAKE }}
           echo ${{ inputs.packages }}
           echo "${{ steps.packages.outputs.stringList }}"
           #echo "$INPUTS_PACKAGES"
