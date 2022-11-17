@@ -15,8 +15,7 @@ on:
       packages:
         description: "Additional package list"
         type: string
-        #default: "autopoint, desktop-file-utils"
-        default: autopoint, desktop-file-utils
+        default: "autopoint, desktop-file-utils"
   workflow_dispatch:
 
 # A workflow run is made up of jobs that can run sequentially or in parallel
@@ -75,7 +74,12 @@ jobs:
 
       - name: Initialize
         env:
-            PACKAGES: autopoint desktop-file-utils
+            #PACKAGES: autopoint desktop-file-utils
+            PACKAGES: >
+              autopoint
+              # For make from
+              desktop-file-utils
+              gobject-introspection
         run: |
           sudo apt-get -qq update
           echo ${{ env.PACKAGES }}
