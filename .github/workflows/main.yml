@@ -35,7 +35,7 @@ jobs:
           repository: ibus/ibus
           fetch-depth: 200
 
-      # Runs a single command using the runners shell
+      # Runs a single command using the runners shells
       - name: Prepare required packges
         id: packages
         uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
@@ -44,10 +44,10 @@ jobs:
         #  #echo "$INPUTS_PACKAGES"
         with:
          #packages: "autopoint, desktop-file-utils"
-         stringArray: 
-         - "autopoint"
-         - "desktop-file-utils"
-         #stringArray: '["autopoint", "desktop-file-utils"]'
+         #stringArray: 
+         #- "autopoint"
+         #- "desktop-file-utils"
+         stringArray: '["autopoint", "desktop-file-utils"]'
          #stringArray:
          # # For autogen.sh
          # - autopoint
