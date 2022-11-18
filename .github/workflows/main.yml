@@ -53,7 +53,7 @@ jobs:
           fedora*)
             ls /etc/yum.repos.d/
             cat /etc/yum.repos.d/fedora.repo
-            sudo dnf check
+            sudo dnf -y clean all
             sudo dnf -v -y update
             sudo dnf -v -y install git which
             ;;
