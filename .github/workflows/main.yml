@@ -88,11 +88,12 @@ jobs:
 
       - name: Checkout
         env:
-          ARTIFACT_NAME: git-${{ matrix.distro }}_${{ matrix.arch }}
+          artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
         run: |
           pwd
           echo $GITHUB_WORKSPACE
-          ls -al "$PWD/artifacts/${{ env.ARTIFACT_NAME }}"
+          ls -al "$PWD/artifacts/$artifact_name"
+          ls -al "/artifacts"
           #ls -a ${{ github.workspace }}
           echo "upper directory"
           git fetch --prune --unshallow --tags
