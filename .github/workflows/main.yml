@@ -51,8 +51,8 @@ jobs:
             sudo apt-get install -q -y git
             ;;
           fedora*)
-            ls /var/lib/dnf
-            ls /var/cache/dnf
+            ls /etc/yum.repos.d/
+            cat /etc/yum.repos.d/fedora.repo
             sudo dnf check
             sudo dnf -v -y update
             sudo dnf -v -y install git which
