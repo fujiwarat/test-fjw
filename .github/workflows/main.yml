@@ -35,6 +35,11 @@ jobs:
         with:
           repository: ibus/ibus
           fetch-depth: 200
+        run: |
+          pwd
+          ls -a ${{ github.workspace }}
+          env GIT_PAGER=cat git tag
+          env GIT_PAGER=cat git log
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
