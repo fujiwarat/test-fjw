@@ -85,6 +85,8 @@ jobs:
           run: |
             cp $(which git) "/artifacts/$artifact_name"
             echo "Produced artifact at /artifacts/$artifact_name"
+            ls /etc/*release
+            cat /etc/*release
 
       - name: Checkout
         env:
@@ -92,12 +94,10 @@ jobs:
         run: |
           pwd
           echo $GITHUB_WORKSPACE
-          ls -al "$PWD/artifacts/$artifact_name"
-          ls -al "/artifacts"
+          file "$PWD/artifacts/$artifact_name"
           #ls -a ${{ github.workspace }}
           echo "upper directory"
           git fetch --prune --unshallow --tags
-          ls /etc/*release
           #env GIT_PAGER=cat git tag
           #env GIT_PAGER=cat git log
 
