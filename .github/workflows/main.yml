@@ -38,6 +38,7 @@ jobs:
       - run: |
           pwd
           ls -a ${{ github.workspace }}
+          git fetch --prune --unshallow --tags
           env GIT_PAGER=cat git tag
           env GIT_PAGER=cat git log
 
