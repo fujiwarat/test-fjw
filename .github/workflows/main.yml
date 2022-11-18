@@ -87,7 +87,7 @@ jobs:
             echo "Produced artifact at /artifacts/$artifact_name"
 
       - name: Checkout
-        env: |
+        env:
           artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
         run: |
           pwd
