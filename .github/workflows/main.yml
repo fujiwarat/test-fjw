@@ -30,12 +30,14 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE
       # https://github.com/actions/checkout
+      # https://github.com/actions/github-script
       - uses: actions/checkout@v2
         with:
           repository: ibus/ibus
           fetch-depth: 200
 
-      # Runs a single command using the runners shells
+      # list from string array
+      # https://github.com/marketplace/actions/create-list-from-string-array
       - name: Prepare required packges
         id: packages
         uses: lucaspinheirogit/list-from-string-array-action@v1.4.3
@@ -48,31 +50,8 @@ jobs:
          #- "autopoint"
          #- "desktop-file-utils"
          stringArray: '["autopoint", "desktop-file-utils"]'
-         #stringArray:
-         # # For autogen.sh
-         # - autopoint
-         # # For make from
-         # # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
-         # - desktop-file-utils
-         # - gobject-introspection
-         # - gtk-doc-tools
-         # - iso-codes
-         # - libdconf-dev
-         # - libgirepository1.0-dev
-         # - libglib2.0-dev
-         # - libgtk-3-bin
-         # - libgtk-3-dev
-         # - libgtk2.0-dev
-         # - libnotify-dev
-         # - libtool
-         # - libwayland-dev
-         # - python-gi-dev
-         # - python3-all
-         # - unicode-cldr-core
-         # - unicode-data
-         # - valac
 
-      - name: Initialize
+      - name: Install additional packages
         env:
          #PACKAGES: autopoint desktop-file-utils
          # For autogen.sh
@@ -82,6 +61,7 @@ jobs:
          # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
          PACKAGES_MAKE: >
            desktop-file-utils
+           dbus-x11
            gobject-introspection
            gtk-doc-tools
            iso-codes
@@ -122,7 +102,7 @@ jobs:
           --with-ucd-dir='/usr/share/unicode'
           --enable-install-tests
 
-      - name: Run autogen
+      - name: Run make
         # Set the cutom DESTDIR because the default DESTDIR
         # /home/travis/bulid/fujiwarat/$PKG/ibus/ibus-$VERSION/_inst seems to
         # be too long and failed to set DESTDIR to install
