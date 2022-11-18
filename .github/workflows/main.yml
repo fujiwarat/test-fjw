@@ -25,21 +25,71 @@ jobs:
     # The type of runner that the job will run on
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     runs-on: ubuntu-latest
+    name: Build on ${{ matrix.disrro }} ${{ matrix.arch }}
+
+    strategy:
+      matrix:
+        include:
+          - arch: aarch64
+            distro: ubuntu_latest
+          - arch: aarch64
+            distro: fedora_latest
 
     # Steps represent a sequence of tasks as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE
       # https://github.com/actions/checkout
       # https://github.com/actions/github-script
+      # https://github.com/uraimo/run-on-arch-action
       - uses: actions/checkout@v2
+      - uses: uraimo/run-on-arch-action@v2
+        name: Build artifact
+        id: build
         with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
+
+          # Not required, but speed up builds
+          githubToken: ${{ github.token }}
+
           repository: ibus/ibus
           fetch-depth: 200
+
+          setup: |
+            mkdir -p "$PWD/artifacts"
+
+          # Mount the artifacts directory as /artifacts in the container
+          dockerRunArgs: |
+            --volue "$PWD/artifacts:/artifacts"
+
+          env: |
+            artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
+
+          install: |
+            case "${{ matrix.distro }}" in
+            ubuntu*)
+              apt-get update -qq -y
+              apt-get install -q -y git
+              ;;
+            fedora*)
+              dnf -y update
+              dnf -y install git which
+              ;;
+            *)
+              echo "Not supported ${{ matrix.distro }}"
+              exit 1
+              ;;
+            esac
+
+          run: |
+            cp $(which git) "/artifacts/$artifact_name"
+            echo "Produced artifact at /artifacts/$artifact_name"
 
       - name: Checkout
         run: |
           pwd
           echo $GITHUB_WORKSPACE
+          ls -al "$PWD/artivacts"
           ls -a ${{ github.workspace }}
           git fetch --prune --unshallow --tags
           #env GIT_PAGER=cat git tag
