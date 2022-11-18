@@ -87,17 +87,16 @@ jobs:
             echo "Produced artifact at /artifacts/$artifact_name"
 
       - name: Checkout
+        env: |
+          artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
         run: |
           pwd
           echo $GITHUB_WORKSPACE
           ls -al "$PWD/artifacts/$artifact_name"
-          ls -a ${{ github.workspace }}
+          #ls -a ${{ github.workspace }}
           echo "upper directory"
-          ls -a
           git fetch --prune --unshallow --tags
           ls /etc/*release
-          cat /etc/*release
-          file $(which git)
           #env GIT_PAGER=cat git tag
           #env GIT_PAGER=cat git log
 
