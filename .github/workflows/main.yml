@@ -47,12 +47,14 @@ jobs:
         run: |
           case "${{ matrix.container }}" in
           ubuntu*)
-            apt-get update -qq -y
-            apt-get install -q -y git
+            sudo apt-get update -qq -y
+            sudo apt-get install -q -y git
             ;;
           fedora*)
-            dnf -y update
-            dnf -y install git which
+            ls /etc/*release
+            cat /etc/*release
+            sudo dnf -v -y update
+            sudo dnf -v -y install git which
             ;;
           *)
             echo "Not supported ${{ matrix.distro }}"
