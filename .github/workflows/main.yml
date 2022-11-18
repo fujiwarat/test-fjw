@@ -112,14 +112,34 @@ jobs:
           echo "${{ steps.packages.outputs.stringList }}"
           #echo "$INPUTS_PACKAGES"
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Run autogen
         # configure options from
         # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
         run: >
-          echo ./autogen.sh
+          ./autogen.sh
           --enable-gtk-doc
           --with-python=/usr/bin/python3
           --with-ucd-dir='/usr/share/unicode'
           --enable-install-tests
+
+      - name: Run autogen
+        # Set the cutom DESTDIR because the default DESTDIR
+        # /home/travis/bulid/fujiwarat/$PKG/ibus/ibus-$VERSION/_inst seems to
+        # be too long and failed to set DESTDIR to install
+        # bindings/pygobject/IBus.py
+        run: >
+          make distcheck
+          DISTCHECK_CONFIGURE_FLAGS="
+          --enable-gtk-doc
+          --disable-schemas-install
+          --enable-memconf
+          --with-python=/usr/bin/python3
+          --with-ucd-dir='/usr/share/unicode'
+          --enable-install-tests
+          "
+          DISABLE_GUI_TESTS="
+          ibus-compose ibus-keypress test-stress xkb-latin-layouts
+          "
+          VERBOSE=1
+          DESTDIR="$HOME/build/$USER/dest"
 
