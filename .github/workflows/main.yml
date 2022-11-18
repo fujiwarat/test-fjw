@@ -90,8 +90,10 @@ jobs:
         run: |
           pwd
           echo $GITHUB_WORKSPACE
-          ls -al "$PWD/artivacts"
+          ls -al "$PWD/artifacts"
           ls -a ${{ github.workspace }}
+          echo "upper directory"
+          ls -a ..
           git fetch --prune --unshallow --tags
           #env GIT_PAGER=cat git tag
           #env GIT_PAGER=cat git log
