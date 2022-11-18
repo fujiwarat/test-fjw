@@ -117,7 +117,7 @@ jobs:
         # configure options from
         # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
         run: >
-          ./autogen.sh
+          echo ./autogen.sh
             --enable-gtk-doc
             --with-python=/usr/bin/python3
             --with-ucd-dir='/usr/share/unicode'
