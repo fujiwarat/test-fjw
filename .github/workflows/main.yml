@@ -45,10 +45,26 @@ jobs:
 
       - name: Checkout
         run: |
+          case "${{ matrix.container }}" in
+          ubuntu*)
+            apt-get update -qq -y
+            apt-get install -q -y git
+            ;;
+          fedora*)
+            dnf -y update
+            dnf -y install git which
+            ;;
+          *)
+            echo "Not supported ${{ matrix.distro }}"
+            exit 1
+            ;;
+          esac
           pwd
           echo $GITHUB_WORKSPACE
           #ls -a ${{ github.workspace }}
           ls -a
+          ls /etc/*release
+          cat /etc/*release
           git fetch --prune --unshallow --tags
           #env GIT_PAGER=cat git tag
           #env GIT_PAGER=cat git log
