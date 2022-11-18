@@ -45,6 +45,7 @@ jobs:
         with:
           repository: ibus/ibus
           fetch-depth: 200
+          path: ibus
 
       - uses: uraimo/run-on-arch-action@v2
         name: Build artifact
