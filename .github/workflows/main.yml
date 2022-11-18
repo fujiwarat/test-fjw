@@ -28,7 +28,7 @@ jobs:
 
     strategy:
       matrix:
-        container: ["fedora:37", "ubuntu:jammy"]
+        container: ["fedora:36", "ubuntu:jammy"]
 
     container:
       image: ${{ matrix.container }}
