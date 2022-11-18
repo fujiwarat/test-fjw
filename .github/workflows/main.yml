@@ -25,7 +25,7 @@ jobs:
     # The type of runner that the job will run on
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     runs-on: ubuntu-latest
-    name: Build on ${{ matrix.disrro }} ${{ matrix.arch }}
+    name: Build on ${{ matrix.distro }} ${{ matrix.arch }}
 
     strategy:
       matrix:
@@ -42,6 +42,10 @@ jobs:
       # https://github.com/actions/github-script
       # https://github.com/uraimo/run-on-arch-action
       - uses: actions/checkout@v2
+        with:
+          repository: ibus/ibus
+          fetch-depth: 200
+
       - uses: uraimo/run-on-arch-action@v2
         name: Build artifact
         id: build
@@ -52,15 +56,12 @@ jobs:
           # Not required, but speed up builds
           githubToken: ${{ github.token }}
 
-          repository: ibus/ibus
-          fetch-depth: 200
-
           setup: |
             mkdir -p "$PWD/artifacts"
 
           # Mount the artifacts directory as /artifacts in the container
           dockerRunArgs: |
-            --volue "$PWD/artifacts:/artifacts"
+            --volume "$PWD/artifacts:/artifacts"
 
           env: |
             artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
