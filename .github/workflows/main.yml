@@ -51,11 +51,11 @@ jobs:
             sudo apt-get install -q -y git
             ;;
           fedora*)
-            ls /etc/yum.repos.d/
-            cat /etc/yum.repos.d/fedora.repo
+            #ls /etc/yum.repos.d/
+            #cat /etc/yum.repos.d/fedora.repo
             #sudo dnf -y clean all
             #sudo dnf -v -y update
-            sudo dnf -v -y install git which
+            dnf -v -y install git which
             ;;
           *)
             echo "Not supported ${{ matrix.distro }}"
