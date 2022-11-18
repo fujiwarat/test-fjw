@@ -86,6 +86,7 @@ jobs:
           run: |
             cp $(which git) "/artifacts/$artifact_name"
             echo "Produced artifact at /artifacts/$artifact_name"
+            pwd
             ls /etc/*release
             cat /etc/*release
             ls /home/runner/work/test-fjw/test-fjw
