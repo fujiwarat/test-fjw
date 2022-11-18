@@ -31,7 +31,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE
       # https://github.com/actions/checkout
       # https://github.com/actions/github-script
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
           repository: ibus/ibus
           fetch-depth: 200
