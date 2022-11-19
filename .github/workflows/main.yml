@@ -49,7 +49,7 @@ jobs:
 
     container:
       image: ${{ matrix.container.distro }}
-      #image: quay.io/${{ matrix.container }}
+      #image: quay.io/${{ matrix.container.distro }}
 
     # Steps represent a sequence of tasks as part of the job
     steps:
