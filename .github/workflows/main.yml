@@ -148,7 +148,7 @@ jobs:
             dnf -y install $PACKAGES
             ;;
           *)
-            echo "Not supported ${{ matrix.distro }}"
+            echo "Not supported ${{ matrix.container.distro }}"
             ls /etc/*release
             cat /etc/*release
             exit 1
@@ -228,7 +228,7 @@ jobs:
           --disable-schemas-install
           --enable-memconf
           --with-python=/usr/bin/python3
-          --with-ucd-dir='${{ matrix.container.ucd_dir }}'
+          --with-ucd-dir=/usr/share/unicode
           --enable-install-tests
           "
           DISABLE_GUI_TESTS="
