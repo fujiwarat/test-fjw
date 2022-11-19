@@ -53,25 +53,85 @@ jobs:
     # Steps represent a sequence of tasks as part of the job
     steps:
       - name: Install distro packages
+        env:
+         #PACKAGES: autopoint desktop-file-utils
+         # For autogen.sh
+         UBUNTU_PACKAGES_AUTOGEN: >
+           autopoint
+         # For make from
+         # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
+         UBUNTU_PACKAGES_MAKE: >
+           desktop-file-utils
+           dbus-x11
+           gobject-introspection
+           gtk-doc-tools
+           iso-codes
+           libdconf-dev
+           libgirepository1.0-dev
+           libglib2.0-dev
+           libgtk-3-bin
+           libgtk-3-dev
+           libgtk2.0-dev
+           libnotify-dev
+           libtool
+           libwayland-dev
+           python-gi-dev
+           python3-all
+           unicode-cldr-core
+           unicode-data
+           valac
+         FEDORA_PACKAGES_MAKE: >
+           gettext-devel
+           libtool
+           gtk2-devel
+           gtk3-devel
+           gtk4-devel
+           dbus-glib-devel
+           dbus-python-devel
+           desktop-file-utils
+           gtk-doc
+           dconf-devel
+           dbus-x11
+           python3-devel
+           python3-gobject
+           git
+           vala
+           iso-codes-devel
+           libnotify-devel
+           wayland-devel
+           cldr-emoji-annotation
+           unicode-emoji
+           unicode-ucd
+           systemd
+         # for gtkdoc-fixxref
+         FEDORA_PACKAGES_GTKDOC: >
+           glib2-doc
+         # for ibus-keypress
+         FEDORA_PACKAGES_CI_KEY: >
+           libXtst-devel
+
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
           case "${{ matrix.container }}" in
           ubuntu*)
+            cat /etc/lsb-release
             apt-get update -qq -y
             apt-get install -q -y git
-            cat /etc/lsb-release
+            PACKAGES=$(echo "$UBUNTU_PACKAGES_AUTOGEN $UBUNTU_PACKAGES_MAKE" | tr -d '\n')
+            apt-get install -y $PACKAGES
+            dpkg -l | grep unicode-data
             ;;
           fedora*)
-            #ls /etc/yum.repos.d/
-            #cat /etc/yum.repos.d/fedora.repo
-            #sudo dnf -y clean all
-            #sudo dnf -v -y update
+            cat /etc/fedora-release
             dnf -y update
             dnf -y install git which
-            cat /etc/fedora-release
+            PACKAGES=$(echo "$FEDORA_PACKAGES_MAKE $FEDORA_PACKAGES_GTKDOC $FEDORA_PACKAGES_CI_KEY" | tr -d '\n')
+            dnf -y install $PACKAGES
             ;;
           *)
             echo "Not supported ${{ matrix.distro }}"
+            ls /etc/*release
+            cat /etc/*release
             exit 1
             ;;
           esac
@@ -79,11 +139,12 @@ jobs:
           echo $GITHUB_WORKSPACE
           #ls -a ${{ github.workspace }}
           ls -a
-          ls /etc/*release
-          cat /etc/*release
           #git fetch --prune --unshallow --tags
           #env GIT_PAGER=cat git tag
           #env GIT_PAGER=cat git log
+          echo ${{ inputs.packages }}
+          #echo "${{ steps.packages.outputs.stringList }}"
+          #echo "$INPUTS_PACKAGES"
 
       # Checks-out your repository under $GITHUB_WORKSPACE
       # https://github.com/actions/checkout
@@ -116,44 +177,13 @@ jobs:
          #- "desktop-file-utils"
          stringArray: '["autopoint", "desktop-file-utils"]'
 
-      - name: Install additional packages
-        env:
-         #PACKAGES: autopoint desktop-file-utils
-         # For autogen.sh
-         PACKAGES_AUTOGEN: >
-           autopoint
-         # For make from
-         # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
-         PACKAGES_MAKE: >
-           desktop-file-utils
-           dbus-x11
-           gobject-introspection
-           gtk-doc-tools
-           iso-codes
-           libdconf-dev
-           libgirepository1.0-dev
-           libglib2.0-dev
-           libgtk-3-bin
-           libgtk-3-dev
-           libgtk2.0-dev
-           libnotify-dev
-           libtool
-           libwayland-dev
-           python-gi-dev
-           python3-all
-           unicode-cldr-core
-           unicode-data
-           valac
-        run: |
-          echo "## apt-get -qq update"
-          sudo apt-get -qq update
-          PACKAGES=$(echo "${{ env.PACKAGES_AUTOGEN }} ${{ env.PACKAGES_MAKE }}" | tr -d '\n')
-          echo "## apt install -y $PACKAGES"
-          sudo apt install -y $PACKAGES
-          dpkg -l | grep unicode-data
-          echo ${{ inputs.packages }}
-          echo "${{ steps.packages.outputs.stringList }}"
-          #echo "$INPUTS_PACKAGES"
+      #- name: Install additional packages
+      #  run: |
+      #    #echo "## apt-get -qq update"
+      #    #sudo apt-get -qq update
+      #    #PACKAGES=$(echo "${{ env.PACKAGES_AUTOGEN }} ${{ env.PACKAGES_MAKE }}" | tr -d '\n')
+      #    #echo "## apt install -y $PACKAGES"
+      #    #apt install -y $PACKAGES
 
       - name: Run autogen
         # configure options from
