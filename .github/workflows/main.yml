@@ -59,23 +59,27 @@ jobs:
         with:
           repository: ibus/ibus
           fetch-depth: 200
+          run: |
+            pwd
+            ls -a
+            git fetch --prune --unshallow --tags
 
       - name: Checkout
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
           case "${{ matrix.container }}" in
           ubuntu*)
-            sudo apt-get update -qq -y
-            sudo apt-get install -q -y git
+            apt-get update -qq -y
+            apt-get install -q -y git
             ;;
           fedora*)
             #ls /etc/yum.repos.d/
             #cat /etc/yum.repos.d/fedora.repo
             #sudo dnf -y clean all
             #sudo dnf -v -y update
-            rpm -q dnf
-            dnf --version
-            dnf -d 10 -e 10 -v -y install git which
+            dnf -y update
+            dnf -y install git which
+            cat /etc/fedora-release
             ;;
           *)
             echo "Not supported ${{ matrix.distro }}"
