@@ -96,7 +96,9 @@ jobs:
       - name: Fetch git tags
         run: |
           pwd
-          ls -a
+          id
+          ls -al
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           git fetch --prune --unshallow --tags
 
       # list from string array
