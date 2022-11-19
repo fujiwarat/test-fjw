@@ -77,6 +77,7 @@ jobs:
            libwayland-dev
            python-gi-dev
            python3-all
+           systemd
            unicode-cldr-core
            unicode-data
            valac
@@ -109,23 +110,36 @@ jobs:
          # for ibus-keypress
          FEDORA_PACKAGES_CI_KEY: >
            libXtst-devel
+         # for gcc -fanalyzer -fsanitize=address -fsanitize=leak options
+         FEDORA_PACKAGES_GCC_OPTIONS: >
+           libasan
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
           case "${{ matrix.container }}" in
           ubuntu*)
             cat /etc/lsb-release
+            echo "apt-get update -qq -y"
             apt-get update -qq -y
+            echo "apt-get install -q -y git"
             apt-get install -q -y git
-            PACKAGES=$(echo "$UBUNTU_PACKAGES_AUTOGEN $UBUNTU_PACKAGES_MAKE" | tr -d '\n')
+            PACKAGES=$(echo "$UBUNTU_PACKAGES_AUTOGENE" | tr -d '\n')
+            PACKAGES=$(echo "$PACKAGES $UBUNTU_PACKAGES_MAKE" | tr -d '\n')
+            echo "apt-get install -y $PACKAGES"
             apt-get install -y $PACKAGES
             dpkg -l | grep unicode-data
             ;;
           fedora*)
             cat /etc/fedora-release
+            echo "dnf -y update"
             dnf -y update
+            echo "dnf -y install git which"
             dnf -y install git which
-            PACKAGES=$(echo "$FEDORA_PACKAGES_MAKE $FEDORA_PACKAGES_GTKDOC $FEDORA_PACKAGES_CI_KEY" | tr -d '\n')
+            PACKAGES=$(echo "$FEDORA_PACKAGES_MAKE" | tr -d '\n')
+            PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_GTKDOC" | tr -d '\n')
+            PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_CI_KEY" | tr -d '\n')
+            PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_GCC_OPTIONS" | tr -d '\n')
+            echo "dnf -y install $PACKAGES"
             dnf -y install $PACKAGES
             ;;
           *)
