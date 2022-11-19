@@ -52,25 +52,14 @@ jobs:
 
     # Steps represent a sequence of tasks as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE
-      # https://github.com/actions/checkout
-      # https://github.com/actions/github-script
-      - uses: actions/checkout@v2
-        with:
-          repository: ibus/ibus
-          fetch-depth: 200
-          run: |
-            pwd
-            ls -a
-            git fetch --prune --unshallow --tags
-
-      - name: Checkout
+      - name: Install distro packages
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
           case "${{ matrix.container }}" in
           ubuntu*)
             apt-get update -qq -y
             apt-get install -q -y git
+            cat /etc/lsb-release
             ;;
           fedora*)
             #ls /etc/yum.repos.d/
@@ -92,9 +81,23 @@ jobs:
           ls -a
           ls /etc/*release
           cat /etc/*release
-          git fetch --prune --unshallow --tags
+          #git fetch --prune --unshallow --tags
           #env GIT_PAGER=cat git tag
           #env GIT_PAGER=cat git log
+
+      # Checks-out your repository under $GITHUB_WORKSPACE
+      # https://github.com/actions/checkout
+      # https://github.com/actions/github-script
+      - uses: actions/checkout@v2
+        with:
+          repository: ibus/ibus
+          fetch-depth: 200
+
+      - name: Fetch git tags
+        run: |
+          pwd
+          ls -a
+          git fetch --prune --unshallow --tags
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
