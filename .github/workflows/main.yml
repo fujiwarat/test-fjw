@@ -73,8 +73,7 @@ jobs:
             #sudo dnf -v -y update
             rpm -q dnf
             dnf --version
-            which dnf
-            dnf -v -y install git which
+            dnf -d 10 -e 10 -v -y install git which
             ;;
           *)
             echo "Not supported ${{ matrix.distro }}"
