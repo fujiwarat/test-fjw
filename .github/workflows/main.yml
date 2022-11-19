@@ -62,7 +62,7 @@ jobs:
 
       - name: Checkout
         run: |
-          #echo "fedora ${{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
+          #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
           case "${{ matrix.container }}" in
           ubuntu*)
             sudo apt-get update -qq -y
