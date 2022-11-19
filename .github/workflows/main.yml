@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: [ {distro: fedora:37, ucd_dir: /usr/share/unicode/ucd}, {distro: ubuntu:jammy, ucd_dir: /usr/share/unicode} ]
+        container: [ {distro: "fedora:37", ucd_dir: "/usr/share/unicode/ucd"}, {distro: "ubuntu:jammy", ucd_dir: "/usr/share/unicode"} ]
         #container: ["fedora:37", "ubuntu:jammy"]
         #container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
 
