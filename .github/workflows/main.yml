@@ -31,7 +31,7 @@ jobs:
     outputs:
       fedora_latest: ${{ steps.releases.outputs.stable }}
       fedora_development: ${{ steps.releases.outputs.development }}
-      #ubuntu_latest: ''
+      ubuntu_latest: ${{ steps.releases.outputs.active }}
 
   # This workflow contains a single job called "build"
   build:
