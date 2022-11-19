@@ -71,7 +71,6 @@ jobs:
             #cat /etc/yum.repos.d/fedora.repo
             #sudo dnf -y clean all
             #sudo dnf -v -y update
-            ifconfig -a
             ping -c 5  mirrors.fedoraproject.org
             dnf --version
             dnf -v -y install git which
