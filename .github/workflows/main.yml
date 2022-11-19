@@ -111,8 +111,10 @@ jobs:
          FEDORA_PACKAGES_CI_KEY: >
            libXtst-devel
          # for gcc -fanalyzer -fsanitize=address -fsanitize=leak options
-         FEDORA_PACKAGES_GCC_OPTIONS: >
+         # xkeyboard-config-devel to make ibus/engine/simle.xml.in
+         FEDORA_PACKAGES_DISTRO: >
            libasan
+           xkeyboard-config-devel
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
@@ -128,6 +130,7 @@ jobs:
             echo "apt-get install -y $PACKAGES"
             apt-get install -y $PACKAGES
             dpkg -l | grep unicode-data
+            echo "${PATH}:/usr/lib/x86_64-linux-gnu/libgtk-3-0" >> $GITHUB_PATH
             ;;
           fedora*)
             cat /etc/fedora-release
@@ -138,7 +141,7 @@ jobs:
             PACKAGES=$(echo "$FEDORA_PACKAGES_MAKE" | tr -d '\n')
             PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_GTKDOC" | tr -d '\n')
             PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_CI_KEY" | tr -d '\n')
-            PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_GCC_OPTIONS" | tr -d '\n')
+            PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_DISTRO" | tr -d '\n')
             echo "dnf -y install $PACKAGES"
             dnf -y install $PACKAGES
             ;;
@@ -159,6 +162,7 @@ jobs:
           echo ${{ inputs.packages }}
           #echo "${{ steps.packages.outputs.stringList }}"
           #echo "$INPUTS_PACKAGES"
+          echo $PATH
 
       # Checks-out your repository under $GITHUB_WORKSPACE
       # https://github.com/actions/checkout
@@ -175,6 +179,7 @@ jobs:
           ls -al
           git config --global --add safe.directory $GITHUB_WORKSPACE
           git fetch --prune --unshallow --tags
+          echo $PATH
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
