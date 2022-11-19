@@ -20,6 +20,19 @@ on:
 
 # A workflow run is made up of jobs that can run sequentially or in parallel
 jobs:
+  get_distro:
+    name: Arrange distribution
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query distribution
+        id: distro
+        # https://github.com/marketplace/actions/get-fedora-releases
+        uses: sgallagher/get-fedora-releases-action@v1
+    outputs:
+      fedora_latest: ${{ steps.releases.outputs.stable }}
+      fedora_development: ${{ steps.releases.outputs.development }}
+      ubuntu_latest: ''
+
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
@@ -28,10 +41,11 @@ jobs:
 
     strategy:
       matrix:
-        container: ["fedora:36", "ubuntu:jammy"]
+        container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
 
     container:
-      image: ${{ matrix.container }}
+      image: quay.io/${{ matrix.container }}
+      #image: ${{ matrix.container }}
 
     # Steps represent a sequence of tasks as part of the job
     steps:
