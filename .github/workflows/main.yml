@@ -38,7 +38,7 @@ jobs:
     # The type of runner that the job will run on
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     runs-on: ubuntu-latest
-    needs: get_distro
+    #needs: get_distro
 
     strategy:
       fail-fast: false
