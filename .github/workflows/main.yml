@@ -98,7 +98,21 @@ jobs:
           echo ${{ inputs.packages }}
           echo "${{ steps.packages.outputs.stringList }}"
           #echo "$INPUTS_PACKAGES"
+
+      - uses: actions/checkout@v2
+        name: Fetch Additional patches
+        with:
+          repository: fujiwarat/test-fjw
+          path: test-fjw
+
+      - name: Apply additional patches
+        run: |
           ls -a ${{ github.workspace }}
+          gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs gtk+-3.0`
+          echo "#!/bin/sh" > a.sh
+          echo "echo a" > a.sh
+          chmod a+x a.sh
+          ./testspawn
 
       - name: Run autogen
         # configure options from
