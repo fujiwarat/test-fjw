@@ -206,6 +206,11 @@ jobs:
           ls -a
           patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
           patch -p1 < ./test-fjw/ibus-xx-debug.patch
+          gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs gtk+-3.0`
+          echo "#!/bin/sh" > a.sh
+          echo "echo a" > a.sh
+          chmod a+x a.sh
+          ./testspawn
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array

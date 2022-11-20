@@ -50,7 +50,7 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/runtest b/src/tests/runtest
-index 036dc771..fa693fd6 100755
+index 036dc771..36bcd359 100755
 --- a/src/tests/runtest
 +++ b/src/tests/runtest
 @@ -24,6 +24,7 @@
@@ -61,11 +61,12 @@ index 036dc771..fa693fd6 100755
  BUS_REQUIRED_TESTS="
  ibus-bus
  ibus-config
-@@ -135,6 +136,16 @@ run_test_case()
+@@ -135,6 +136,17 @@ run_test_case()
          func_copy_component "../$top_srcdir/engine/simple.xml"
          func_copy_component "../$top_srcdir/conf/memconf/memconf.xml"
  
-+        #cat components/memconf.xml
++        sed -i -e 's|ibus-memconf|.libs/ibus-memconf|' components/memconf.xml 
++        cat components/memconf.xml
 +        #(cd ../../../; pwd)
 +        ls -l ../../../conf/memconf
 +        file ../../../conf/memconf/ibus-memconf
@@ -78,7 +79,7 @@ index 036dc771..fa693fd6 100755
          IBUS_COMPONENT_PATH=$PWD/components
          export IBUS_COMPONENT_PATH
  
-@@ -187,6 +198,10 @@ run_test_case()
+@@ -187,6 +199,10 @@ run_test_case()
          # Wait until all necessary components are up.
          sleep 3
  
