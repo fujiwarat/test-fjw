@@ -50,7 +50,7 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/runtest b/src/tests/runtest
-index 036dc771..58f253da 100755
+index 036dc771..fa693fd6 100755
 --- a/src/tests/runtest
 +++ b/src/tests/runtest
 @@ -24,6 +24,7 @@
@@ -69,10 +69,10 @@ index 036dc771..58f253da 100755
 +        #(cd ../../../; pwd)
 +        ls -l ../../../conf/memconf
 +        file ../../../conf/memconf/ibus-memconf
-+        head ../../../conf/memconf/ibus-memconf
-+        sed -i '/\/bin\/sh/a\
++        sed -i '/\/bin\/bash/a\
 +set -x -v' ../../../conf/memconf/ibus-memconf
 +        ls -l ../../../conf/memconf
++        head ../../../conf/memconf/ibus-memconf
 +        #bash -x ../../../conf/memconf/ibus-memconf
 +
          IBUS_COMPONENT_PATH=$PWD/components
