@@ -121,7 +121,6 @@ jobs:
          FEDORA_PACKAGES_DISTRO: >
            libasan
            xkeyboard-config-devel
-         FEDORA_PACKAGES_DISTRO: "${PATH}:/usr/lib/x86_64-linux-gnu/libgtk-3-0"
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
