@@ -120,6 +120,7 @@ jobs:
          FEDORA_PACKAGES_DISTRO: >
            libasan
            xkeyboard-config-devel
+         PATH: ${PATH}:/usr/lib/x86_64-linux-gnu/libgtk-3-0
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
@@ -216,7 +217,7 @@ jobs:
           ./autogen.sh
           --enable-gtk-doc
           --with-python=/usr/bin/python3
-          --with-ucd-dir='/usr/share/unicode'
+          --with-ucd-dir=${{ matrix.ucd_dir }}
           --enable-install-tests
 
       - name: Run make
@@ -231,7 +232,7 @@ jobs:
           --disable-schemas-install
           --enable-memconf
           --with-python=/usr/bin/python3
-          --with-ucd-dir='/usr/share/unicode'
+          --with-ucd-dir=${{ matrix.ucd_dir }}
           --enable-install-tests
           "
           DISABLE_GUI_TESTS="
