@@ -136,7 +136,7 @@ jobs:
             apt-get update -qq -y
             echo "apt-get install -q -y git"
             apt-get install -q -y git
-            PACKAGES=$(echo "$UBUNTU_PACKAGES_AUTOGENE" | tr -d '\n')
+            PACKAGES=$(echo "$UBUNTU_PACKAGES_AUTOGEN" | tr -d '\n')
             PACKAGES=$(echo "$PACKAGES $UBUNTU_PACKAGES_MAKE" | tr -d '\n')
             echo "apt-get install -y $PACKAGES"
             apt-get install -y $PACKAGES
