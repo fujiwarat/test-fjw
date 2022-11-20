@@ -44,7 +44,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: ["fedora:37", "ubuntu:jammy"]
+        container: [fedora:37, ubuntu:jammy]
         #container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
         include:
           - container: fedora:37
@@ -124,7 +124,6 @@ jobs:
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
-          echo "/usr/lib/x86_64-linux-gnu/libgtk-3-0" >> $GITHUB_PATH
           case "${{ matrix.container }}" in
           ubuntu*)
             cat /etc/lsb-release
@@ -137,7 +136,9 @@ jobs:
             echo "apt-get install -y $PACKAGES"
             apt-get install -y $PACKAGES
             dpkg -l | grep unicode-data
-            echo "${PATH}"
+            # https://stackoverflow.com/questions/60169752/how-to-update-the-path-in-a-github-action-workflow-file-for-a-windows-latest-hos
+            # Should update PATH after gtk3 is installed
+            echo "/usr/lib/x86_64-linux-gnu/libgtk-3-0" >> $GITHUB_PATH
             ;;
           fedora*)
             cat /etc/fedora-release
