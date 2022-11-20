@@ -123,6 +123,7 @@ jobs:
          FEDORA_PACKAGES_DISTRO: >
            libasan
            xkeyboard-config-devel
+           patch
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
@@ -202,6 +203,7 @@ jobs:
         run: |
           ls -a
           patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
+          patch -p1 < ./test-fjw/ibus-xx-debug.patch
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array

@@ -1,0 +1,25 @@
+diff --git a/src/tests/Makefile.am b/src/tests/Makefile.am
+index ca5285bd..f0a7f6d7 100644
+--- a/src/tests/Makefile.am
++++ b/src/tests/Makefile.am
+@@ -89,7 +89,7 @@ TESTS_ENVIRONMENT = \
+     DISABLE_DAEMONIZE_IN_TESTS="$(DISABLE_DAEMONIZE_IN_TESTS)" \
+     $(NULL)
+ 
+-LOG_COMPILER = $(srcdir)/runtest
++LOG_COMPILER = bash -x $(srcdir)/runtest
+ test_metas_in = meta.test.in
+ 
+ if ENABLE_INSTALL_TESTS
+diff --git a/src/tests/runtest b/src/tests/runtest
+index 036dc771..e7951da3 100755
+--- a/src/tests/runtest
++++ b/src/tests/runtest
+@@ -24,6 +24,7 @@
+ : ${DISABLE_GUI_TESTS:=''}
+ : ${DISABLE_DAEMONIZE_IN_TESTS:=''}
+ 
++pwd
+ BUS_REQUIRED_TESTS="
+ ibus-bus
+ ibus-config
