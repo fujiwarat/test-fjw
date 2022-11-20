@@ -41,6 +41,7 @@ jobs:
     #needs: get_distro
 
     # https://docs.github.com/ja/actions/using-jobs/using-a-matrix-for-your-jobs
+    # https://github.com/uraimo/run-on-arch-action
     strategy:
       fail-fast: false
       matrix:
@@ -140,6 +141,7 @@ jobs:
             # https://stackoverflow.com/questions/60169752/how-to-update-the-path-in-a-github-action-workflow-file-for-a-windows-latest-hos
             # Should update PATH after gtk3 is installed
             echo "/usr/lib/x86_64-linux-gnu/libgtk-3-0" >> $GITHUB_PATH
+            file /usr/lib/x86_64-linux-gnu/libgtk-3-0/gtk-query-immodules-3.0
             ;;
           fedora*)
             cat /etc/fedora-release
@@ -190,6 +192,17 @@ jobs:
           git fetch --prune --unshallow --tags
           echo $PATH
 
+      - uses: actions/checkout@v2
+        name: Fetch Additional patches
+        with:
+          repository: fujiwarat/test-fjw
+          path: test-fjw
+
+      - name: Apply additional patches
+        run: |
+          ls -a
+          patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
+
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
       - name: Prepare required packges
@@ -229,6 +242,7 @@ jobs:
         # be too long and failed to set DESTDIR to install
         # bindings/pygobject/IBus.py
         run: >
+          export DISABLE_DAEMONIZE_IN_TESTS=1;
           make distcheck
           DISTCHECK_CONFIGURE_FLAGS="
           --enable-gtk-doc

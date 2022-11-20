@@ -1,0 +1,27 @@
+From 12566d74543279b7f4405c391847d66df11ca0a7 Mon Sep 17 00:00:00 2001
+From: fujiwarat <takao.fujiwara1@gmail.com>
+Date: Sun, 20 Nov 2022 15:21:52 +0900
+Subject: [PATCH] src/tests: Fallback gtk-query-immodules-3.0 for Ubuntu 22.04
+
+---
+ src/tests/runtest | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/tests/runtest b/src/tests/runtest
+index a229140a..036dc771 100755
+--- a/src/tests/runtest
++++ b/src/tests/runtest
+@@ -44,6 +44,10 @@ MACHINE=`uname -m`
+ if test x"$MACHINE" = xx86_64 ; then
+     GTK_QUERY_MODULE=gtk-query-immodules-3.0-64
+ fi
++which $GTK_QUERY_MODULE
++if [ $? -ne 0 ] ; then
++    GTK_QUERY_MODULE=gtk-query-immodules-3.0
++fi
+ 
+ retval=0
+ 
+-- 
+2.37.3
+
