@@ -1,3 +1,41 @@
+diff --git a/bus/component.c b/bus/component.c
+index 6d0bc0ae..60000ecd 100644
+--- a/bus/component.c
++++ b/bus/component.c
+@@ -353,6 +353,8 @@ bus_component_start (BusComponent *component,
+     gboolean retval;
+ 
+     GError *error = NULL;
++    g_warning ("test bus_component_start %s",
++               ibus_component_get_exec (component->component));
+     if (!g_shell_parse_argv (ibus_component_get_exec (component->component),
+                              &argc,
+                              &argv,
+diff --git a/conf/memconf/main.c b/conf/memconf/main.c
+index 0eec41d4..3db7f5eb 100644
+--- a/conf/memconf/main.c
++++ b/conf/memconf/main.c
+@@ -66,17 +66,20 @@ main (gint argc, gchar **argv)
+     GError *error = NULL;
+     GOptionContext *context;
+ 
++    g_warning ("test ibus-memconf:main");
+     setlocale (LC_ALL, "");
+ 
+     context = g_option_context_new ("- ibus memconf component");
+ 
+     g_option_context_add_main_entries (context, entries, "ibus-memconf");
+ 
++    g_warning ("test2 ibus-memconf:main");
+     if (!g_option_context_parse (context, &argc, &argv, &error)) {
+         g_print ("Option parsing failed: %s\n", error->message);
+         exit (-1);
+     }
+ 
++    g_warning ("test3 ibus-memconf:main");
+     ibus_memconf_start ();
+ 
+     return 0;
 diff --git a/src/tests/Makefile.am b/src/tests/Makefile.am
 index ca5285bd..f0a7f6d7 100644
 --- a/src/tests/Makefile.am
@@ -12,7 +50,7 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/runtest b/src/tests/runtest
-index 036dc771..c65e91b1 100755
+index 036dc771..d0ca37aa 100755
 --- a/src/tests/runtest
 +++ b/src/tests/runtest
 @@ -24,6 +24,7 @@
@@ -27,11 +65,11 @@ index 036dc771..c65e91b1 100755
          func_copy_component "../$top_srcdir/engine/simple.xml"
          func_copy_component "../$top_srcdir/conf/memconf/memconf.xml"
  
-+        cat components/memconf.xml
-+        (cd ../../../; pwd)
-+        ls ../../../conf/memconf
-+        file ../../../conf/memconf/ibus-memconf
-+        bash -x ../../../conf/memconf/ibus-memconf
++        #cat components/memconf.xml
++        #(cd ../../../; pwd)
++        #ls ../../../conf/memconf
++        #file ../../../conf/memconf/ibus-memconf
++        #bash -x ../../../conf/memconf/ibus-memconf
 +
          IBUS_COMPONENT_PATH=$PWD/components
          export IBUS_COMPONENT_PATH
@@ -40,9 +78,9 @@ index 036dc771..c65e91b1 100755
          # Wait until all necessary components are up.
          sleep 3
  
-+        ps -ef | grep ibus
-+        env LD_LIBRARY_PATH=/__w/test-fjw/test-fjw/ibus-1.5.27/_build/sub/src/.libs:../../src/.libs:../../src \
-+        strace ../../../conf/memconf/.libs/ibus-memconf
++        #ps -ef | grep ibus
++        #env LD_LIBRARY_PATH=/__w/test-fjw/test-fjw/ibus-1.5.27/_build/sub/src/.libs:../../src/.libs:../../src \
++        #strace ../../../conf/memconf/.libs/ibus-memconf
 +
          export GTK_IM_MODULE=ibus
      fi
