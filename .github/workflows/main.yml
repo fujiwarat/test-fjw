@@ -20,164 +20,14 @@ on:
 
 # A workflow run is made up of jobs that can run sequentially or in parallel
 jobs:
-  #get_distro:
-  #  name: Arrange distribution
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - name: Query distribution
-  #      id: distro
-  #      # https://github.com/marketplace/actions/get-fedora-releases
-  #      uses: sgallagher/get-fedora-releases-action@v1
-  #  outputs:
-  #    fedora_latest: ${{ steps.distro.outputs.stable }}
-  #    fedora_development: ${{ steps.distro.outputs.development }}
-  #    ubuntu_latest: ${{ steps.distro.outputs.active }}
-
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
     runs-on: ubuntu-latest
-    #needs: get_distro
-
-    # https://docs.github.com/ja/actions/using-jobs/using-a-matrix-for-your-jobs
-    # https://github.com/uraimo/run-on-arch-action
-    strategy:
-      fail-fast: false
-      matrix:
-        # Need double quotation for colon
-        container: ["fedora:37", "ubuntu:jammy"]
-        #container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
-        include:
-          - container: fedora:37
-            ucd_dir: /usr/share/unicode/ucd
-          - container: ubuntu:jammy
-            ucd_dir: /usr/share/unicode
-
-    container:
-      image: ${{ matrix.container }}
-      #image: quay.io/${{ matrix.container }}
 
     # Steps represent a sequence of tasks as part of the job
     steps:
-      - name: Install distro packages
-        env:
-         #PACKAGES: autopoint desktop-file-utils
-         # For autogen.sh
-         UBUNTU_PACKAGES_AUTOGEN: >
-           autopoint
-           strace
-         # For make from
-         # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
-         UBUNTU_PACKAGES_MAKE: >
-           desktop-file-utils
-           dbus-x11
-           gobject-introspection
-           gtk-doc-tools
-           iso-codes
-           libdconf-dev
-           libgirepository1.0-dev
-           libglib2.0-dev
-           libgtk-3-bin
-           libgtk-3-dev
-           libgtk2.0-dev
-           libnotify-dev
-           libtool
-           libwayland-dev
-           python-gi-dev
-           python3-all
-           systemd
-           unicode-cldr-core
-           unicode-data
-           valac
-         FEDORA_PACKAGES_MAKE: >
-           gettext-devel
-           libtool
-           gtk2-devel
-           gtk3-devel
-           gtk4-devel
-           dbus-glib-devel
-           dbus-python-devel
-           desktop-file-utils
-           gtk-doc
-           dconf-devel
-           dbus-x11
-           python3-devel
-           python3-gobject
-           git
-           vala
-           iso-codes-devel
-           libnotify-devel
-           wayland-devel
-           cldr-emoji-annotation
-           unicode-emoji
-           unicode-ucd
-           systemd
-         # for gtkdoc-fixxref
-         FEDORA_PACKAGES_GTKDOC: >
-           glib2-doc
-         # for ibus-keypress
-         FEDORA_PACKAGES_CI_KEY: >
-           libXtst-devel
-         # for gcc -fanalyzer -fsanitize=address -fsanitize=leak options
-         # xkeyboard-config-devel to make ibus/engine/simle.xml.in
-         FEDORA_PACKAGES_DISTRO: >
-           libasan
-           xkeyboard-config-devel
-           patch
-           strace
-
-        run: |
-          #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
-          case "${{ matrix.container }}" in
-          ubuntu*)
-            cat /etc/lsb-release
-            echo "apt-get update -qq -y"
-            apt-get update -qq -y
-            echo "apt-get install -q -y git"
-            apt-get install -q -y git
-            PACKAGES=$(echo "$UBUNTU_PACKAGES_AUTOGEN" | tr -d '\n')
-            PACKAGES=$(echo "$PACKAGES $UBUNTU_PACKAGES_MAKE" | tr -d '\n')
-            echo "apt-get install -y $PACKAGES"
-            apt-get install -y $PACKAGES
-            dpkg -l | grep unicode-data
-            # https://stackoverflow.com/questions/60169752/how-to-update-the-path-in-a-github-action-workflow-file-for-a-windows-latest-hos
-            # Should update PATH after gtk3 is installed
-            echo "/usr/lib/x86_64-linux-gnu/libgtk-3-0" >> $GITHUB_PATH
-            file /usr/lib/x86_64-linux-gnu/libgtk-3-0/gtk-query-immodules-3.0
-            ;;
-          fedora*)
-            cat /etc/fedora-release
-            echo "dnf -y update"
-            dnf -y update
-            echo "dnf -y install git which"
-            dnf -y install git which
-            PACKAGES=$(echo "$FEDORA_PACKAGES_MAKE" | tr -d '\n')
-            PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_GTKDOC" | tr -d '\n')
-            PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_CI_KEY" | tr -d '\n')
-            PACKAGES=$(echo "$PACKAGES $FEDORA_PACKAGES_DISTRO" | tr -d '\n')
-            echo "dnf -y install $PACKAGES"
-            dnf -y install $PACKAGES
-            ;;
-          *)
-            echo "Not supported ${{ matrix.container }}"
-            ls /etc/*release
-            cat /etc/*release
-            exit 1
-            ;;
-          esac
-          pwd
-          echo $GITHUB_WORKSPACE
-          #ls -a ${{ github.workspace }}
-          ls -a
-          #git fetch --prune --unshallow --tags
-          #env GIT_PAGER=cat git tag
-          #env GIT_PAGER=cat git log
-          echo ${{ inputs.packages }}
-          #echo "${{ steps.packages.outputs.stringList }}"
-          #echo "$INPUTS_PACKAGES"
-          echo $PATH
-
       # Checks-out your repository under $GITHUB_WORKSPACE
       # https://github.com/actions/checkout
       # https://github.com/actions/github-script
@@ -186,31 +36,14 @@ jobs:
           repository: ibus/ibus
           fetch-depth: 200
 
-      - name: Fetch git tags
+      - name: Checkout
         run: |
           pwd
-          id
-          ls -al
-          git config --global --add safe.directory $GITHUB_WORKSPACE
+          echo $GITHUB_WORKSPACE
+          ls -a ${{ github.workspace }}
           git fetch --prune --unshallow --tags
-          echo $PATH
-
-      - uses: actions/checkout@v2
-        name: Fetch Additional patches
-        with:
-          repository: fujiwarat/test-fjw
-          path: test-fjw
-
-      - name: Apply additional patches
-        run: |
-          ls -a
-          patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
-          patch -p1 < ./test-fjw/ibus-xx-debug.patch
-          gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs gtk+-3.0`
-          echo "#!/bin/sh" > a.sh
-          echo "echo a" > a.sh
-          chmod a+x a.sh
-          ./testspawn
+          #env GIT_PAGER=cat git tag
+          #env GIT_PAGER=cat git log
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
@@ -227,13 +60,45 @@ jobs:
          #- "desktop-file-utils"
          stringArray: '["autopoint", "desktop-file-utils"]'
 
-      #- name: Install additional packages
-      #  run: |
-      #    #echo "## apt-get -qq update"
-      #    #sudo apt-get -qq update
-      #    #PACKAGES=$(echo "${{ env.PACKAGES_AUTOGEN }} ${{ env.PACKAGES_MAKE }}" | tr -d '\n')
-      #    #echo "## apt install -y $PACKAGES"
-      #    #apt install -y $PACKAGES
+      - name: Install additional packages
+        env:
+         #PACKAGES: autopoint desktop-file-utils
+         # For autogen.sh
+         PACKAGES_AUTOGEN: >
+           autopoint
+         # For make from
+         # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
+         PACKAGES_MAKE: >
+           desktop-file-utils
+           dbus-x11
+           gobject-introspection
+           gtk-doc-tools
+           iso-codes
+           libdconf-dev
+           libgirepository1.0-dev
+           libglib2.0-dev
+           libgtk-3-bin
+           libgtk-3-dev
+           libgtk2.0-dev
+           libnotify-dev
+           libtool
+           libwayland-dev
+           python-gi-dev
+           python3-all
+           unicode-cldr-core
+           unicode-data
+           valac
+        run: |
+          echo "## apt-get -qq update"
+          sudo apt-get -qq update
+          PACKAGES=$(echo "${{ env.PACKAGES_AUTOGEN }} ${{ env.PACKAGES_MAKE }}" | tr -d '\n')
+          echo "## apt install -y $PACKAGES"
+          sudo apt install -y $PACKAGES
+          dpkg -l | grep unicode-data
+          echo ${{ inputs.packages }}
+          echo "${{ steps.packages.outputs.stringList }}"
+          #echo "$INPUTS_PACKAGES"
+          ls -a ${{ github.workspace }}
 
       - name: Run autogen
         # configure options from
@@ -242,7 +107,7 @@ jobs:
           ./autogen.sh
           --enable-gtk-doc
           --with-python=/usr/bin/python3
-          --with-ucd-dir=${{ matrix.ucd_dir }}
+          --with-ucd-dir='/usr/share/unicode'
           --enable-install-tests
 
       - name: Run make
@@ -251,14 +116,13 @@ jobs:
         # be too long and failed to set DESTDIR to install
         # bindings/pygobject/IBus.py
         run: >
-          export DISABLE_DAEMONIZE_IN_TESTS=1;
           make distcheck
           DISTCHECK_CONFIGURE_FLAGS="
           --enable-gtk-doc
           --disable-schemas-install
           --enable-memconf
           --with-python=/usr/bin/python3
-          --with-ucd-dir=${{ matrix.ucd_dir }}
+          --with-ucd-dir='/usr/share/unicode'
           --enable-install-tests
           "
           DISABLE_GUI_TESTS="
