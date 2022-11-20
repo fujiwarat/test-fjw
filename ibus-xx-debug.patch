@@ -1,18 +1,5 @@
-diff --git a/src/tests/Makefile.am b/src/tests/Makefile.am
-index ca5285bd..f0a7f6d7 100644
---- a/src/tests/Makefile.am
-+++ b/src/tests/Makefile.am
-@@ -89,7 +89,7 @@ TESTS_ENVIRONMENT = \
-     DISABLE_DAEMONIZE_IN_TESTS="$(DISABLE_DAEMONIZE_IN_TESTS)" \
-     $(NULL)
- 
--LOG_COMPILER = $(srcdir)/runtest
-+LOG_COMPILER = bash -x $(srcdir)/runtest
- test_metas_in = meta.test.in
- 
- if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/runtest b/src/tests/runtest
-index 036dc771..ebba920b 100755
+index 036dc771..e506251e 100755
 --- a/src/tests/runtest
 +++ b/src/tests/runtest
 @@ -24,6 +24,7 @@
@@ -23,7 +10,7 @@ index 036dc771..ebba920b 100755
  BUS_REQUIRED_TESTS="
  ibus-bus
  ibus-config
-@@ -135,6 +136,11 @@ run_test_case()
+@@ -135,6 +136,13 @@ run_test_case()
          func_copy_component "../$top_srcdir/engine/simple.xml"
          func_copy_component "../$top_srcdir/conf/memconf/memconf.xml"
  
@@ -31,6 +18,8 @@ index 036dc771..ebba920b 100755
 +        (cd ../../../; pwd)
 +        ls ../../../conf/memconf
 +        file ../../../conf/memconf/ibus-memconf
++        bash -x ../../../conf/memconf/ibus-memconf
++        strace ../../../conf/memconf/.libs/ibus-memconf
 +
          IBUS_COMPONENT_PATH=$PWD/components
          export IBUS_COMPONENT_PATH

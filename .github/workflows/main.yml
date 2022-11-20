@@ -66,6 +66,7 @@ jobs:
          # For autogen.sh
          UBUNTU_PACKAGES_AUTOGEN: >
            autopoint
+           strace
          # For make from
          # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
          UBUNTU_PACKAGES_MAKE: >
@@ -124,6 +125,7 @@ jobs:
            libasan
            xkeyboard-config-devel
            patch
+           strace
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
