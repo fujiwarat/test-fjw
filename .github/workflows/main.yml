@@ -43,13 +43,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: [ {distro: "fedora:37", ucd_dir: "/usr/share/unicode/ucd"}, {distro: "ubuntu:jammy", ucd_dir: "/usr/share/unicode"} ]
-        #container: ["fedora:37", "ubuntu:jammy"]
+        container: [fedora:37, ubuntu:jammy]
+        #container: [ {distro: "fedora:37", ucd_dir: "/usr/share/unicode/ucd"}, {distro: "ubuntu:jammy", ucd_dir: "/usr/share/unicode"} ]
         #container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
+        include:
+          - container: fedora:37
+            ucd_dir: /usr/share/unicode/ucd
+          - container: ubuntu:jammy
+            ucd_dir: /usr/share/unicode
 
     container:
-      image: ${{ matrix.container.distro }}
-      #image: quay.io/${{ matrix.container.distro }}
+      image: ${{ matrix.container }}
+      #image: quay.io/${{ matrix.container }}
 
     # Steps represent a sequence of tasks as part of the job
     steps:
@@ -120,7 +125,7 @@ jobs:
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
-          case "${{ matrix.container.distro }}" in
+          case "${{ matrix.container }}" in
           ubuntu*)
             cat /etc/lsb-release
             echo "apt-get update -qq -y"
@@ -148,7 +153,7 @@ jobs:
             dnf -y install $PACKAGES
             ;;
           *)
-            echo "Not supported ${{ matrix.container.distro }}"
+            echo "Not supported ${{ matrix.container }}"
             ls /etc/*release
             cat /etc/*release
             exit 1
@@ -213,7 +218,7 @@ jobs:
           ./autogen.sh
           --enable-gtk-doc
           --with-python=/usr/bin/python3
-          --with-ucd-dir='/usr/share/unicode'
+          --with-ucd-dir='${{ matrix.ucd_dir }}'
           --enable-install-tests
 
       - name: Run make
@@ -228,7 +233,7 @@ jobs:
           --disable-schemas-install
           --enable-memconf
           --with-python=/usr/bin/python3
-          --with-ucd-dir=/usr/share/unicode
+          --with-ucd-dir='${{ matrix.ucd_dir }}'
           --enable-install-tests
           "
           DISABLE_GUI_TESTS="
