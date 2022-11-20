@@ -44,7 +44,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: [fedora:37, ubuntu:jammy]
+        # Need double quotation for colon
+        container: ["fedora:37", "ubuntu:jammy"]
         #container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
         include:
           - container: fedora:37
