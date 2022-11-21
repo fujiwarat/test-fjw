@@ -29,14 +29,15 @@ jobs:
     # Steps represent a sequence of tasks as part of the job
     steps:
       - name: Run docker
-        run: |
-          echo $GITHUB_WORKSPACE
-          sudo apt-get -qq update
-          #docker run hello-world
-          docker search fedora
-          docker run --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
-          --volume /sys/fs/cgroup:/sys/fs/cgroup:rw -it dokken/fedora-37 \
-          /bin/bash
+        uses: docker://dokken/fedora-37
+      #  run: |
+      #    echo $GITHUB_WORKSPACE
+      #    sudo apt-get -qq update
+      #    #docker run hello-world
+      #    docker search fedora
+      #    docker run --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
+      #    --volume /sys/fs/cgroup:/sys/fs/cgroup:rw -it dokken/fedora-37 \
+      #    /bin/bash
 
 
       # Checks-out your repository under $GITHUB_WORKSPACE
