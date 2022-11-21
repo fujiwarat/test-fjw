@@ -238,11 +238,12 @@ jobs:
       - name: Run autogen
         # configure options from
         # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
+        #  --with-ucd-dir=${{ matrix.ucd_dir }}
         run: >
           ./autogen.sh
           --enable-gtk-doc
           --with-python=/usr/bin/python3
-          --with-ucd-dir=${{ matrix.ucd_dir }}
+          --with-ucd-dir=/usr/share/unicode
           --enable-install-tests
 
       - name: Run make
@@ -250,6 +251,7 @@ jobs:
         # /home/travis/bulid/fujiwarat/$PKG/ibus/ibus-$VERSION/_inst seems to
         # be too long and failed to set DESTDIR to install
         # bindings/pygobject/IBus.py
+        #  --with-ucd-dir=${{ matrix.ucd_dir }}
         run: >
           export DISABLE_DAEMONIZE_IN_TESTS=1;
           make distcheck
@@ -258,7 +260,7 @@ jobs:
           --disable-schemas-install
           --enable-memconf
           --with-python=/usr/bin/python3
-          --with-ucd-dir=${{ matrix.ucd_dir }}
+          --with-ucd-dir=/usr/share/unicode
           --enable-install-tests
           "
           DISABLE_GUI_TESTS="
