@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Run docker
         uses: docker://dokken/fedora-37
+        with:
+          args: /bin/bash
       #  run: |
       #    echo $GITHUB_WORKSPACE
       #    sudo apt-get -qq update
