@@ -140,7 +140,6 @@ jobs:
             apt-get install -q -y git
             PACKAGES=$(echo "$UBUNTU_PACKAGES_AUTOGEN" | tr -d '\n')
             PACKAGES=$(echo "$PACKAGES $UBUNTU_PACKAGES_MAKE" | tr -d '\n')
-            PACKAGES="libglib2.0-dev gcc"
             echo "apt-get install -y $PACKAGES"
             apt-get install -y $PACKAGES
             #dpkg -l | grep unicode-data
