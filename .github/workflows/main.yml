@@ -31,23 +31,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: aarch64
+          - arch: amd64
             distro: ubuntu_latest
-          - arch: aarch64
+          - arch: x86_64
             distro: fedora_latest
 
     # Steps represent a sequence of tasks as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE
-      # https://github.com/actions/checkout
-      # https://github.com/actions/github-script
       # https://github.com/uraimo/run-on-arch-action
-      - uses: actions/checkout@v2
-        with:
-          repository: ibus/ibus
-          fetch-depth: 200
-          path: ibus
-
       - uses: uraimo/run-on-arch-action@v2
         name: Build artifact
         id: build
@@ -92,6 +83,14 @@ jobs:
             cat /etc/*release
             ls /home/runner/work/test-fjw/test-fjw
 
+      # Checks-out your repository under $GITHUB_WORKSPACE
+      # https://github.com/actions/checkout
+      # https://github.com/actions/github-script
+      - uses: actions/checkout@v2
+        with:
+          repository: ibus/ibus
+          fetch-depth: 200
+
       - name: Checkout
         env:
           artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
@@ -104,6 +103,23 @@ jobs:
           git fetch --prune --unshallow --tags
           #env GIT_PAGER=cat git tag
           #env GIT_PAGER=cat git log
+
+      - uses: actions/checkout@v2
+        name: Fetch Additional patches
+        with:
+          repository: fujiwarat/test-fjw
+          path: test-fjw
+
+      - name: Apply additional patches
+        run: |
+          ls -a
+          patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
+          patch -p1 < ./test-fjw/ibus-xx-debug.patch
+          gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs glib-2.0`
+          echo "#!/bin/sh" > a.sh
+          echo "echo a" > a.sh
+          chmod a+x a.sh
+          ./testspawn
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
