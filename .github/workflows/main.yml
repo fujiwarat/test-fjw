@@ -42,6 +42,14 @@ jobs:
       #    /bin/bash
 
 
+      - name: Login docker
+        run: |
+          pwd
+          echo $GITHUB_WORKSPACE
+          docker login localhost:8080
+          ls /etc/*release
+          cat /etc/*release
+
       # Checks-out your repository under $GITHUB_WORKSPACE
       # https://github.com/actions/checkout
       # https://github.com/actions/github-script
