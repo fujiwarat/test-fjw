@@ -68,7 +68,9 @@ jobs:
           env: |
             artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
 
-          install: |
+          #install: |
+
+          run: |
             case "${{ matrix.distro }}" in
             ubuntu*)
               apt-get update -qq -y
@@ -83,8 +85,6 @@ jobs:
               exit 1
               ;;
             esac
-
-          run: |
             cp $(which git) "/artifacts/$artifact_name"
             echo "Produced artifact at /artifacts/$artifact_name"
             pwd
