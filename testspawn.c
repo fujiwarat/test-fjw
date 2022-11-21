@@ -67,7 +67,7 @@ bus_component_start (void)
     }
 
     error = NULL;
-    GSpawnFlags flags = G_SPAWN_DO_NOT_REAP_CHILD;
+    GSpawnFlags flags = G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_LEAVE_DESCRIPTORS_OPEN;
 #ifdef USE_IBUS_FD
     int stdin_fd = unix_open_file ("/dev/null", O_CREAT | O_WRONLY);
     int stdout_fd = unix_open_file ("./stdout.log", O_CREAT | O_WRONLY);
