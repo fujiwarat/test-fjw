@@ -3,8 +3,9 @@
 #include <fcntl.h> /* O_CREAT O_WRONLY */
 #include <unistd.h> /* read() write() */
 
-#define USE_IBUS_FD 1
+//#define USE_IBUS_FD 1
 
+#ifdef USE_IBUS_FD
 #ifndef O_BINARY
 #define O_BINARY 0
 #endif
@@ -13,6 +14,7 @@
 #define O_CLOEXEC 0
 #else
 #define HAVE_O_CLOEXEC 1
+#endif
 #endif
 
 #ifdef USE_IBUS_FD
@@ -37,9 +39,9 @@ unix_open_file (const char *filename,
 #endif
 
 static void
-bus_component_child_cb (GPid          pid,
-                        gint          status,
-                        GMainLoop   **loop)
+run_program_child_cb (GPid          pid,
+                      gint          status,
+                      GMainLoop   **loop)
 {
     g_spawn_close_pid (pid);
 
@@ -48,26 +50,15 @@ bus_component_child_cb (GPid          pid,
 }
 
 gboolean
-bus_component_start (void)
+run_program (void)
 {
-    gint argc;
-    gchar **argv;
+    gint argc = 2;
+    gchar *argv[] = {"/bin/echo", "test"};
     gboolean retval;
     GPid pid;
-
     GError *error = NULL;
-    if (!g_shell_parse_argv ("./a.sh",
-                             &argc,
-                             &argv,
-                             &error)) {
-        g_warning ("Can not parse component exec: %s",
-                   error->message);
-        g_error_free (error);
-        return FALSE;
-    }
-
-    error = NULL;
-    GSpawnFlags flags = G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_LEAVE_DESCRIPTORS_OPEN;
+    //GSpawnFlags flags = G_SPAWN_DO_NOT_REAP_CHILD | G_SPAWN_LEAVE_DESCRIPTORS_OPEN;
+    GSpawnFlags flags = G_SPAWN_DO_NOT_REAP_CHILD;
 #ifdef USE_IBUS_FD
     int stdin_fd = unix_open_file ("/dev/null", O_CREAT | O_WRONLY);
     int stdout_fd = unix_open_file ("./stdout.log", O_CREAT | O_WRONLY);
@@ -93,7 +84,6 @@ bus_component_start (void)
                             NULL, NULL,
                             &pid, &error);
 #endif
-    g_strfreev (argv);
     if (!retval) {
         g_warning ("Can not execute component: %s",
                    error->message);
@@ -103,7 +93,7 @@ bus_component_start (void)
 
     GMainLoop *loop = g_main_loop_new (NULL, FALSE);
     g_child_watch_add (pid,
-                       (GChildWatchFunc) bus_component_child_cb,
+                       (GChildWatchFunc) run_program_child_cb,
                        &loop);
     g_main_loop_run (loop);
 
@@ -134,6 +124,6 @@ bus_component_start (void)
 int
 main (int argc, char *argv[])
 {
-    return !bus_component_start ();
+    return !run_program();
 }
 

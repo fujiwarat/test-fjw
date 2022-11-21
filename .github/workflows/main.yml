@@ -140,6 +140,7 @@ jobs:
             apt-get install -q -y git
             PACKAGES=$(echo "$UBUNTU_PACKAGES_AUTOGEN" | tr -d '\n')
             PACKAGES=$(echo "$PACKAGES $UBUNTU_PACKAGES_MAKE" | tr -d '\n')
+            PACKAGES="libglib2.0-dev gcc"
             echo "apt-get install -y $PACKAGES"
             apt-get install -y $PACKAGES
             dpkg -l | grep unicode-data
@@ -206,8 +207,8 @@ jobs:
       - name: Apply additional patches
         run: |
           ls -a
-          patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
-          patch -p1 < ./test-fjw/ibus-xx-debug.patch
+          #patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
+          #patch -p1 < ./test-fjw/ibus-xx-debug.patch
           gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs glib-2.0`
           echo "#!/bin/sh" > a.sh
           echo "echo a" > a.sh
