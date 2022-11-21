@@ -28,6 +28,7 @@ jobs:
 
     # Steps represent a sequence of tasks as part of the job
     steps:
+      - name: Run docker
         run: |
           echo $GITHUB_WORKSPACE
           sudo apt-get -qq update
