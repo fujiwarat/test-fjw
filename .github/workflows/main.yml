@@ -31,9 +31,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: amd64
+          - arch: aarch64
             distro: ubuntu_latest
-          - arch: x86_64
+          - arch: aarch64
             distro: fedora_latest
 
     # Steps represent a sequence of tasks as part of the job
