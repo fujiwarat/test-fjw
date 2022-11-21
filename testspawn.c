@@ -69,6 +69,7 @@ bus_component_start (void)
     error = NULL;
     GSpawnFlags flags = G_SPAWN_DO_NOT_REAP_CHILD;
 #ifdef USE_IBUS_FD
+    int stdin_fd = unix_open_file ("/dev/null", O_CREAT | O_WRONLY);
     int stdout_fd = unix_open_file ("./stdout.log", O_CREAT | O_WRONLY);
     int stderr_fd = unix_open_file ("./stderr.log", O_CREAT | O_WRONLY);
     retval = g_spawn_async_with_pipes_and_fds (NULL,
@@ -77,7 +78,7 @@ bus_component_start (void)
                                                flags,
                                                NULL,
                                                NULL,
-                                               -1,
+                                               stdin_fd,
                                                stdout_fd,
                                                stderr_fd,
                                                NULL,
@@ -107,6 +108,7 @@ bus_component_start (void)
     g_main_loop_run (loop);
 
 #ifdef USE_IBUS_FD
+    close (stdin_fd);
     close (stdout_fd);
     close (stderr_fd);
 #define SIZE 512
