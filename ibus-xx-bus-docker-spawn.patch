@@ -1,0 +1,241 @@
+From ff097b6f86b8c2c7391f9291609fe08e913ff2f5 Mon Sep 17 00:00:00 2001
+From: fujiwarat <takao.fujiwara1@gmail.com>
+Date: Mon, 21 Nov 2022 23:42:53 +0900
+Subject: [PATCH] bus: Add bus_component_check for GitHub action + Docker
+
+Currently g_spawn_async() is failed in GitHub action + Docker, which
+is called by bus_component_start() because of no permission to close
+file descriptors of the child processes in g_spawn_async().
+Add G_SPAWN_LEAVE_DESCRIPTORS_OPEN to avoid the failre of
+g_spawn_async() for the workaround.
+---
+ bus/component.c | 122 +++++++++++++++++++++++++++++++++++++++---------
+ bus/component.h |   9 ++++
+ bus/main.c      |   3 +-
+ 3 files changed, 112 insertions(+), 22 deletions(-)
+
+diff --git a/bus/component.c b/bus/component.c
+index 6d0bc0ae..6c0b5b11 100644
+--- a/bus/component.c
++++ b/bus/component.c
+@@ -40,6 +40,17 @@ enum {
+     PROP_FACTORY,
+ };
+ 
++enum
++{
++    CHILD_CHDIR_FAILED,
++    CHILD_EXEC_FAILED,
++    CHILD_OPEN_FAILED,
++    CHILD_DUP2_FAILED,
++    CHILD_FORK_FAILED,
++    CHILD_CLOSE_FAILED,
++    GENERIC_ERROR = -1
++};
++
+ struct _BusComponent {
+     IBusObject parent;
+ 
+@@ -81,6 +92,8 @@ static void     bus_component_get_property  (BusComponent          *component,
+                                              GParamSpec            *pspec);
+ static void     bus_component_destroy       (BusComponent          *component);
+ 
++static GSpawnFlags compose_start_flags = G_SPAWN_DO_NOT_REAP_CHILD;
++
+ G_DEFINE_TYPE (BusComponent, bus_component, IBUS_TYPE_OBJECT)
+ 
+ static void
+@@ -337,49 +350,76 @@ bus_component_child_cb (GPid          pid,
+     }
+ }
+ 
+-gboolean
+-bus_component_start (BusComponent *component,
+-                     gboolean      verbose)
++static int
++bus_component_check_start (BusComponent *component,
++                           gboolean      verbose,
++                           gboolean      output_warning)
+ {
++    int argc;
++    gchar **argv;
++    gboolean retval;
++    GError *error = NULL;
++    int error_code = 0;
++
+     g_assert (BUS_IS_COMPONENT (component));
+ 
+     if (component->pid != 0)
+-        return TRUE;
++        return 0;
+ 
+     component->verbose = verbose;
+ 
+-    gint argc;
+-    gchar **argv;
+-    gboolean retval;
+-
+-    GError *error = NULL;
+     if (!g_shell_parse_argv (ibus_component_get_exec (component->component),
+                              &argc,
+                              &argv,
+                              &error)) {
+-        g_warning ("Can not parse component %s exec: %s",
+-                   ibus_component_get_name (component->component),
+-                   error->message);
++        if (output_warning) {
++            g_warning ("Can not parse component %s exec: %s",
++                       ibus_component_get_name (component->component),
++                       error->message);
++        }
+         g_error_free (error);
+-        return FALSE;
++        return GENERIC_ERROR;
+     }
+ 
+     error = NULL;
+-    GSpawnFlags flags = G_SPAWN_DO_NOT_REAP_CHILD;
+     if (!verbose) {
+-        flags |= G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL;
++        compose_start_flags |=
++                G_SPAWN_STDOUT_TO_DEV_NULL| G_SPAWN_STDERR_TO_DEV_NULL;
+     }
+     retval = g_spawn_async (NULL, argv, NULL,
+-                            flags,
++                            compose_start_flags,
+                             NULL, NULL,
+                             &(component->pid), &error);
+     g_strfreev (argv);
+     if (!retval) {
+-        g_warning ("Can not execute component %s: %s",
+-                   ibus_component_get_name (component->component),
+-                   error->message);
++        if (output_warning) {
++            g_warning ("Can not execute component %s: %s",
++                       ibus_component_get_name (component->component),
++                       error->message);
++            error_code = GENERIC_ERROR;
++        } else if (g_strstr_len (error->message, -1,
++                          "Failed to change to directory")) {
++            error_code = CHILD_CHDIR_FAILED;
++        } else if (g_strstr_len (error->message, -1,
++                          "Failed to execute child process")) {
++            error_code = CHILD_EXEC_FAILED;
++        } else if (g_strstr_len (error->message, -1,
++                          "Failed to open file")) {
++            error_code = CHILD_OPEN_FAILED;
++        } else if (g_strstr_len (error->message, -1,
++                          "Failed to duplicate file")) {
++            error_code = CHILD_DUP2_FAILED;
++        } else if (g_strstr_len (error->message, -1,
++                          "Failed to fork")) {
++            error_code = CHILD_FORK_FAILED;
++        } else if (g_strstr_len (error->message, -1,
++                          "Failed to close file")) {
++            error_code = CHILD_CLOSE_FAILED;
++        } else {
++            error_code = GENERIC_ERROR;
++        }
+         g_error_free (error);
+-        return FALSE;
++        return error_code;
+     }
+ 
+     component->child_source_id =
+@@ -387,7 +427,15 @@ bus_component_start (BusComponent *component,
+                            (GChildWatchFunc) bus_component_child_cb,
+                            component);
+ 
+-    return TRUE;
++    return 0;
++}
++
++gboolean
++bus_component_start (BusComponent *component,
++                     gboolean      verbose)
++{
++    return (bus_component_check_start (component, verbose, TRUE) == 0)
++            ? TRUE: FALSE;
+ }
+ 
+ gboolean
+@@ -422,3 +470,35 @@ bus_component_from_engine_desc (IBusEngineDesc *engine)
+ 
+     return (BusComponent *) g_object_get_qdata ((GObject *) engine, quark);
+ }
++
++int
++bus_component_check (void)
++{
++    IBusComponent *ibuscomponent = ibus_component_new (
++            "test_can_close_fd",
++            "test if bus_component_start can close child file descriptor",
++            "1.0",
++            "LGPL-2.0-or-later",
++            "Takao Fujiwara",
++            "https://github.com/ibus/ibus",
++            "/bin/echo test",
++            "ibus10");
++    BusComponent *component;
++    int error_code;
++
++    g_return_val_if_fail (ibuscomponent, GENERIC_ERROR);
++    component = bus_component_new (ibuscomponent, NULL);
++    error_code = bus_component_check_start (component, FALSE, FALSE);
++    g_object_unref (component);
++    /* Workaround to set G_SPAWN_LEAVE_DESCRIPTORS_OPEN
++     * Currently g_spawn_async() is failed in GitHub action + Docker
++     * with the error message:
++     * Failed to close file descriptor for child process (Operation not permitted)
++     * I have no idea why closing the file description is failed
++     * although g_spawn_async() works in Docker by manual.
++     * G_SPAWN_LEAVE_DESCRIPTORS_OPEN flag avoids to close fds.
++     */
++    if (error_code == CHILD_CLOSE_FAILED)
++        compose_start_flags |= G_SPAWN_LEAVE_DESCRIPTORS_OPEN;
++    return error_code;
++}
+diff --git a/bus/component.h b/bus/component.h
+index 0822484f..7fa1b543 100644
+--- a/bus/component.h
++++ b/bus/component.h
+@@ -101,6 +101,15 @@ void             bus_component_set_restart       (BusComponent    *component,
+                                                   gboolean         restart);
+ BusComponent    *bus_component_from_engine_desc  (IBusEngineDesc  *engine);
+ 
++/**
++ * bus_component_check:
++ * Currently checks if g_spawn_async() works with an echo command
++ * and this should be called before the first bus_component_start()
++ *
++ * @returns: error code with g_spawn_async()
++ */
++int              bus_component_check             (void);
++
+ G_END_DECLS
+ #endif
+ 
+diff --git a/bus/main.c b/bus/main.c
+index e80185b1..e346bcf7 100644
+--- a/bus/main.c
++++ b/bus/main.c
+@@ -2,7 +2,7 @@
+ /* vim:set et sts=4: */
+ /* ibus - The Input Bus
+  * Copyright (C) 2008-2013 Peng Huang <shawn.p.huang@gmail.com>
+- * Copyright (C) 2013-2018 Takao Fujiwara <takao.fujiwara1@gmail.com>
++ * Copyright (C) 2013-2022 Takao Fujiwara <takao.fujiwara1@gmail.com>
+  * Copyright (C) 2008-2018 Red Hat, Inc.
+  *
+  * This library is free software; you can redistribute it and/or
+@@ -250,6 +250,7 @@ main (gint argc, gchar **argv)
+             break;
+         }
+     }
++    bus_component_check ();
+     if (!single) {
+         /* execute config component */
+         if (g_strcmp0 (config, "default") == 0) {
+-- 
+2.37.3
+

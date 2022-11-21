@@ -207,12 +207,10 @@ jobs:
       - name: Apply additional patches
         run: |
           ls -a
-          #patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
-          #patch -p1 < ./test-fjw/ibus-xx-debug.patch
+          patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
+          patch -p1 < ./test-fjw/ibus-xx-bus-docker-spawn.patch
+          patch -p1 < ./test-fjw/ibus-xx-debug.patch
           gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs glib-2.0`
-          echo "#!/bin/sh" > a.sh
-          echo "echo a" > a.sh
-          chmod a+x a.sh
           ./testspawn
 
       # list from string array
