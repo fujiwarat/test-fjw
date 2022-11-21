@@ -143,11 +143,11 @@ jobs:
             PACKAGES="libglib2.0-dev gcc"
             echo "apt-get install -y $PACKAGES"
             apt-get install -y $PACKAGES
-            dpkg -l | grep unicode-data
+            #dpkg -l | grep unicode-data
             # https://stackoverflow.com/questions/60169752/how-to-update-the-path-in-a-github-action-workflow-file-for-a-windows-latest-hos
             # Should update PATH after gtk3 is installed
-            echo "/usr/lib/x86_64-linux-gnu/libgtk-3-0" >> $GITHUB_PATH
-            file /usr/lib/x86_64-linux-gnu/libgtk-3-0/gtk-query-immodules-3.0
+            #echo "/usr/lib/x86_64-linux-gnu/libgtk-3-0" >> $GITHUB_PATH
+            #file /usr/lib/x86_64-linux-gnu/libgtk-3-0/gtk-query-immodules-3.0
             ;;
           fedora*)
             cat /etc/fedora-release
