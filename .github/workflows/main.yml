@@ -36,7 +36,8 @@ jobs:
           #docker search fedora
           docker run --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
           --volume /sys/fs/cgroup:/sys/fs/cgroup:rw -it dokken/fedora-37 \
-          dnf update -y
+          /bin/bash
+          #dnf update -y
           #dnf install -y gtk3-devel gcc git
           #pwd
           #ls /etc/*release
