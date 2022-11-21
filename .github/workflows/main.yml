@@ -28,42 +28,48 @@ jobs:
 
     # Steps represent a sequence of tasks as part of the job
     steps:
-      - name: Run docker
-        uses: docker://dokken/fedora-37
-        with:
-          args: /bin/bash
-      #  run: |
-      #    echo $GITHUB_WORKSPACE
-      #    sudo apt-get -qq update
-      #    #docker run hello-world
-      #    docker search fedora
-      #    docker run --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
-      #    --volume /sys/fs/cgroup:/sys/fs/cgroup:rw -it dokken/fedora-37 \
-      #    /bin/bash
-
-
       - name: Login docker
         run: |
           pwd
           echo $GITHUB_WORKSPACE
-          docker login localhost:8080
+          sudo apt-get -qq update
+          #docker search fedora
+          docker run --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
+          --volume /sys/fs/cgroup:/sys/fs/cgroup:rw -it dokken/fedora-37 \
+          /bin/bash
+          dnf update -y
+          dnf install -y gtk3-devel gcc git
+          pwd
           ls /etc/*release
           cat /etc/*release
+          exit
+          docker container ls -a
+          docker commit $(docker container ls -a -q) ibus/private:v1
+          docker images
 
       # Checks-out your repository under $GITHUB_WORKSPACE
       # https://github.com/actions/checkout
       # https://github.com/actions/github-script
-      - uses: actions/checkout@v2
-        with:
-          repository: ibus/ibus
-          fetch-depth: 200
+      #- uses: actions/checkout@v2
+      #  with:
+      #    repository: ibus/ibus
+      #    fetch-depth: 200
 
       - name: Checkout
         run: |
           pwd
           echo $GITHUB_WORKSPACE
           ls -a ${{ github.workspace }}
-          git fetch --prune --unshallow --tags
+          docker run -it fujiwara/private:v1 /bin/bash
+          git clone https://github.com/ibus/ibus.git .
+          git clone https://github.com/fujiwarat/test-fjw.git test-fjw
+          gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs glib-2.0`
+          echo "#!/bin/sh" > a.sh
+          echo "echo a" > a.sh
+          chmod a+x a.sh
+          ./testspawn
+          exit
+          #git fetch --prune --unshallow --tags
           #env GIT_PAGER=cat git tag
           #env GIT_PAGER=cat git log
 
