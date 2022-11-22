@@ -36,6 +36,29 @@ index ca5285bd..f0a7f6d7 100644
  test_metas_in = meta.test.in
  
  if ENABLE_INSTALL_TESTS
+diff --git a/src/tests/ibus-bus.c b/src/tests/ibus-bus.c
+index a2af0bb2..6f508c93 100644
+--- a/src/tests/ibus-bus.c
++++ b/src/tests/ibus-bus.c
+@@ -41,6 +41,7 @@ test_list_engines (void)
+     GList *engines;
+     IBUS_TYPE_ENGINE_DESC;
+ 
++    g_warning ("test test_list_engines %s", ibus_bus_is_connected (bus) ? "TRUE" : "FALSE");
+     engines = ibus_bus_list_engines (bus);
+     print_engines (engines);
+ 
+@@ -930,8 +931,10 @@ static void
+ _bus_connected_cb (IBusBus *bus,
+                    gpointer user_data)
+ {
++    g_warning ("test test_bus_new_async callback");
+     g_assert (ibus_bus_is_connected (bus));
+     ibus_quit ();
++    g_warning ("test2 test_bus_new_async callback %s", ibus_bus_is_connected (bus) ? "TRUE" : "FALSE");
+ }
+ 
+ static void
 diff --git a/src/tests/runtest b/src/tests/runtest
 index 036dc771..36bcd359 100755
 --- a/src/tests/runtest

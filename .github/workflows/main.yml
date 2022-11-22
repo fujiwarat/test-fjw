@@ -210,7 +210,7 @@ jobs:
           patch -p1 < ./test-fjw/ibus-xx-bus-docker-spawn.patch
           patch -p1 < ./test-fjw/ibus-xx-debug.patch
           gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs glib-2.0`
-          ./testspawn
+          ./testspawn &
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
