@@ -37,25 +37,33 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/ibus-bus.c b/src/tests/ibus-bus.c
-index a2af0bb2..6f508c93 100644
+index a2af0bb2..e991b93f 100644
 --- a/src/tests/ibus-bus.c
 +++ b/src/tests/ibus-bus.c
-@@ -41,6 +41,7 @@ test_list_engines (void)
+@@ -1,6 +1,7 @@
+ /* -*- mode: C; c-basic-offset: 4; indent-tabs-mode: nil; -*- */
+ 
+ #include <string.h>
++#include <stdio.h>
+ #include "ibus.h"
+ 
+ static IBusBus *bus;
+@@ -41,6 +42,7 @@ test_list_engines (void)
      GList *engines;
      IBUS_TYPE_ENGINE_DESC;
  
-+    g_warning ("test test_list_engines %s", ibus_bus_is_connected (bus) ? "TRUE" : "FALSE");
++    fprintf (stdout, "test test_list_engines %s", ibus_bus_is_connected (bus) ? "TRUE" : "FALSE");
      engines = ibus_bus_list_engines (bus);
      print_engines (engines);
  
-@@ -930,8 +931,10 @@ static void
+@@ -930,8 +932,10 @@ static void
  _bus_connected_cb (IBusBus *bus,
                     gpointer user_data)
  {
-+    g_warning ("test test_bus_new_async callback");
++    fprintf (stdout, "test test_bus_new_async callback");
      g_assert (ibus_bus_is_connected (bus));
      ibus_quit ();
-+    g_warning ("test2 test_bus_new_async callback %s", ibus_bus_is_connected (bus) ? "TRUE" : "FALSE");
++    fprintf (stdout, "test2 test_bus_new_async callback %s", ibus_bus_is_connected (bus) ? "TRUE" : "FALSE");
  }
  
  static void
