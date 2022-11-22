@@ -37,7 +37,7 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/ibus-bus.c b/src/tests/ibus-bus.c
-index a2af0bb2..a1342959 100644
+index a2af0bb2..bba59c5b 100644
 --- a/src/tests/ibus-bus.c
 +++ b/src/tests/ibus-bus.c
 @@ -1,6 +1,7 @@
@@ -56,7 +56,7 @@ index a2af0bb2..a1342959 100644
      engines = ibus_bus_list_engines (bus);
      print_engines (engines);
  
-@@ -930,17 +932,22 @@ static void
+@@ -930,17 +932,28 @@ static void
  _bus_connected_cb (IBusBus *bus,
                     gpointer user_data)
  {
@@ -72,8 +72,14 @@ index a2af0bb2..a1342959 100644
 +    fprintf (stderr, "test test_bus_new_async\n");
      g_object_unref (bus);
      bus = ibus_bus_new_async ();
++    system ("/usr/bin/ps -ef | /usr/bin/grep ibus");
++    g_spawn_command_line_sync  ("ps -ef | grep ibus",
++                                     gchar               **standard_output,
++                                     gchar               **standard_error,
++                                     gint                 *wait_status,
++                                     GError              **error);
      g_signal_connect (bus, "connected", G_CALLBACK (_bus_connected_cb), NULL);
-+    fprintf (stderr, "test2 test_bus_new_async\n");
++    fprintf (stderr, "test2 test_bus_new_async %p\n", bus);
      ibus_main ();
 +    fprintf (stderr, "test3 test_bus_new_async\n");
  }
