@@ -37,7 +37,7 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/ibus-bus.c b/src/tests/ibus-bus.c
-index a2af0bb2..3364e985 100644
+index a2af0bb2..9d1510d6 100644
 --- a/src/tests/ibus-bus.c
 +++ b/src/tests/ibus-bus.c
 @@ -1,6 +1,7 @@
@@ -56,16 +56,17 @@ index a2af0bb2..3364e985 100644
      engines = ibus_bus_list_engines (bus);
      print_engines (engines);
  
-@@ -827,6 +829,8 @@ start_exit_async (void)
+@@ -827,6 +829,9 @@ start_exit_async (void)
       * Now g_usleep() is added here to write down the buffer and not to
       * fail to restart ibus-daemon.
       */
 +    if (system ("/usr/bin/ps -ef | /usr/bin/grep ibus"))
 +        fprintf (stderr, "test start_exit_async something error\n");
++    fprintf (stderr, "test start_exit_async %s\n", ibus_get_address ());
      g_usleep (G_USEC_PER_SEC);
      ibus_bus_exit_async (bus,
                           TRUE, /* restart */
-@@ -930,17 +934,24 @@ static void
+@@ -930,17 +935,24 @@ static void
  _bus_connected_cb (IBusBus *bus,
                     gpointer user_data)
  {
@@ -84,7 +85,7 @@ index a2af0bb2..3364e985 100644
 +    if (system ("/usr/bin/ps -ef | /usr/bin/grep ibus"))
 +        fprintf (stderr, "test test_bus_new_async something error\n");
      g_signal_connect (bus, "connected", G_CALLBACK (_bus_connected_cb), NULL);
-+    fprintf (stderr, "test2 test_bus_new_async %p\n", bus);
++    fprintf (stderr, "test2 test_bus_new_async %s %p\n", ibus_get_address (), bus);
      ibus_main ();
 +    fprintf (stderr, "test3 test_bus_new_async\n");
  }
