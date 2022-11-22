@@ -37,7 +37,7 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/ibus-bus.c b/src/tests/ibus-bus.c
-index a2af0bb2..ab148a68 100644
+index a2af0bb2..7ec28c00 100644
 --- a/src/tests/ibus-bus.c
 +++ b/src/tests/ibus-bus.c
 @@ -1,6 +1,7 @@
@@ -56,7 +56,7 @@ index a2af0bb2..ab148a68 100644
      engines = ibus_bus_list_engines (bus);
      print_engines (engines);
  
-@@ -930,13 +932,16 @@ static void
+@@ -930,16 +932,22 @@ static void
  _bus_connected_cb (IBusBus *bus,
                     gpointer user_data)
  {
@@ -71,8 +71,14 @@ index a2af0bb2..ab148a68 100644
  {
 +    fprintf (stderr, "test test_bus_new_async\n");
      g_object_unref (bus);
++    fprintf (stderr, "test2 test_bus_new_async\n");
      bus = ibus_bus_new_async ();
++    fprintf (stderr, "test3 test_bus_new_async\n");
      g_signal_connect (bus, "connected", G_CALLBACK (_bus_connected_cb), NULL);
++    fprintf (stderr, "test4 test_bus_new_async\n");
+     ibus_main ();
+ }
+ 
 diff --git a/src/tests/runtest b/src/tests/runtest
 index 036dc771..7aeaa9c3 100755
 --- a/src/tests/runtest
