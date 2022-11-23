@@ -37,7 +37,7 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/ibus-bus.c b/src/tests/ibus-bus.c
-index a2af0bb2..e21870bd 100644
+index a2af0bb2..e009c23c 100644
 --- a/src/tests/ibus-bus.c
 +++ b/src/tests/ibus-bus.c
 @@ -1,6 +1,7 @@
@@ -61,7 +61,7 @@ index a2af0bb2..e21870bd 100644
       * fail to restart ibus-daemon.
       */
 +    //if (system ("/usr/bin/ps -ef | /usr/bin/grep ibus"))
-+    if (system ("/usr/bin/ls -l $HOME/.config/ibus/bus"))
++    if (system ("/usr/bin/ls -al"))
 +        fprintf (stderr, "test start_exit_async something error\n");
 +    fprintf (stderr, "test start_exit_async %s\n", ibus_get_address ());
      g_usleep (G_USEC_PER_SEC);
@@ -84,7 +84,7 @@ index a2af0bb2..e21870bd 100644
      g_object_unref (bus);
      bus = ibus_bus_new_async ();
 +    //if (system ("/usr/bin/ps -ef | /usr/bin/grep ibus"))
-+    if (system ("/usr/bin/ls -l $HOME/.config/ibus/bus"))
++    if (system ("/usr/bin/ls -al"))
 +        fprintf (stderr, "test test_bus_new_async something error\n");
      g_signal_connect (bus, "connected", G_CALLBACK (_bus_connected_cb), NULL);
 +    fprintf (stderr, "test2 test_bus_new_async %s %p\n", ibus_get_address (), bus);
@@ -94,7 +94,7 @@ index a2af0bb2..e21870bd 100644
  
  gint
 diff --git a/src/tests/runtest b/src/tests/runtest
-index 036dc771..7aeaa9c3 100755
+index 036dc771..0b1b8f9e 100755
 --- a/src/tests/runtest
 +++ b/src/tests/runtest
 @@ -24,6 +24,7 @@
@@ -109,7 +109,7 @@ index 036dc771..7aeaa9c3 100755
          func_copy_component "../$top_srcdir/engine/simple.xml"
          func_copy_component "../$top_srcdir/conf/memconf/memconf.xml"
  
-+        #sed -i -e 's|ibus-memconf|.libs/ibus-memconf|' components/memconf.xml 
++        #sed -i -e 's|ibus-memconf|.libs/ibus-memconf|' components/memconf.xml
 +        cat components/memconf.xml
 +        #(cd ../../../; pwd)
 +        ls -l ../../../conf/memconf
