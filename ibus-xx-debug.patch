@@ -37,7 +37,7 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/ibus-bus.c b/src/tests/ibus-bus.c
-index a2af0bb2..db3626c5 100644
+index a2af0bb2..d97ba507 100644
 --- a/src/tests/ibus-bus.c
 +++ b/src/tests/ibus-bus.c
 @@ -1,9 +1,11 @@
@@ -74,8 +74,8 @@ index a2af0bb2..db3626c5 100644
 +    switch (event_type) {
 +    case G_FILE_MONITOR_EVENT_CHANGED:
 +        g_debug ("socket file is changed");
-+        g_usleep (G_USEC_PER_SEC);
-+        call_next_async_function ();
++        //g_usleep (G_USEC_PER_SEC);
++        //call_next_async_function ();
 +        break;
 +    case G_FILE_MONITOR_EVENT_CREATED:
 +        g_debug ("socket file is created");
@@ -135,7 +135,7 @@ index a2af0bb2..db3626c5 100644
 +        GFile *file = g_file_new_for_path (address_path);
 +        GError *error = NULL;
 +        g_assert (file);
-+        has_socket_path = TRUE;
++        //has_socket_path = TRUE;
 +        GFileMonitor *monitor = g_file_monitor (file,
 +                                                G_FILE_MONITOR_NONE,
 +                                                NULL,
