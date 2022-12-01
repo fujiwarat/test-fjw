@@ -37,7 +37,7 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/ibus-bus.c b/src/tests/ibus-bus.c
-index a2af0bb2..d97ba507 100644
+index a2af0bb2..24ee8d0d 100644
 --- a/src/tests/ibus-bus.c
 +++ b/src/tests/ibus-bus.c
 @@ -1,9 +1,11 @@
@@ -73,18 +73,18 @@ index a2af0bb2..d97ba507 100644
 +{
 +    switch (event_type) {
 +    case G_FILE_MONITOR_EVENT_CHANGED:
-+        g_debug ("socket file is changed");
++        fprintf (stderr, "socket file is changed\n");
 +        //g_usleep (G_USEC_PER_SEC);
 +        //call_next_async_function ();
 +        break;
 +    case G_FILE_MONITOR_EVENT_CREATED:
-+        g_debug ("socket file is created");
++        fprintf (stderr, "socket file is created\n");
 +        break;
 +    case G_FILE_MONITOR_EVENT_DELETED:
-+        g_debug ("socket file is deleted");
++        fprintf (stderr, "socket file is deleted\n");
 +        break;
 +    default:
-+        g_debug ("socket file is %d", event_type);
++        fprintf (stderr, "socket file is %d\n", event_type);
 +    }
 +}
 +
@@ -190,7 +190,7 @@ index a2af0bb2..d97ba507 100644
          (*async_functions[index++])();
  }
  
-@@ -931,16 +995,30 @@ _bus_connected_cb (IBusBus *bus,
+@@ -931,16 +995,29 @@ _bus_connected_cb (IBusBus *bus,
                     gpointer user_data)
  {
      g_assert (ibus_bus_is_connected (bus));
@@ -204,11 +204,11 @@ index a2af0bb2..d97ba507 100644
  {
 +    int count = 0;
 +    while (!test_async_apis_is_finished) {
-+        g_debug ("test test_bus_new_async %d", count++);
++        fprintf (stderr, "test test_bus_new_async %d\n", count++);
 +        g_usleep (G_USEC_PER_SEC);
 +    }
      g_object_unref (bus);
-+    g_debug ("test2 test_bus_new_async");
++    fprintf (stderr, "test2 test_bus_new_async\n");
 +    //if (system ("/usr/bin/ps -ef | /usr/bin/grep ibus"))
 +    if (system ("/usr/bin/ls -al --full-time"))
 +        fprintf (stderr, "test test_bus_new_async something error\n");
@@ -216,7 +216,6 @@ index a2af0bb2..d97ba507 100644
      g_signal_connect (bus, "connected", G_CALLBACK (_bus_connected_cb), NULL);
 +    fprintf (stderr, "test3 test_bus_new_async %s %p\n", ibus_get_address (), bus);
      ibus_main ();
-+    g_debug ("test3 test_bus_new_async");
 +    fprintf (stderr, "test4 test_bus_new_async\n");
  }
  
