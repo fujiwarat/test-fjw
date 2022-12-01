@@ -42,20 +42,21 @@ jobs:
 
     # https://docs.github.com/ja/actions/using-jobs/using-a-matrix-for-your-jobs
     # https://github.com/uraimo/run-on-arch-action
-    strategy:
-      fail-fast: false
-      matrix:
-        # Need double quotation for colon
-        container: ["fedora:37", "ubuntu:jammy"]
-        #container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
-        include:
-          - container: fedora:37
-            ucd_dir: /usr/share/unicode/ucd
-          - container: ubuntu:jammy
-            ucd_dir: /usr/share/unicode
+    #strategy:
+    #  fail-fast: false
+    #  matrix:
+    #    # Need double quotation for colon
+    #    container: ["fedora:37", "ubuntu:jammy"]
+    #    #container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
+    #    include:
+    #      - container: fedora:37
+    #        ucd_dir: /usr/share/unicode/ucd
+    #      - container: ubuntu:jammy
+    #        ucd_dir: /usr/share/unicode
 
     container:
-      image: ${{ matrix.container }}
+      image: "ubuntu:jammy"
+      #image: ${{ matrix.container }}
       #image: quay.io/${{ matrix.container }}
 
     # Steps represent a sequence of tasks as part of the job
@@ -129,7 +130,8 @@ jobs:
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
-          case "${{ matrix.container }}" in
+          #case "${{ matrix.container }}" in
+          case "ubuntu" in
           ubuntu*)
             cat /etc/lsb-release
             echo "apt-get update -qq -y"
@@ -140,11 +142,11 @@ jobs:
             PACKAGES=$(echo "$PACKAGES $UBUNTU_PACKAGES_MAKE" | tr -d '\n')
             echo "apt-get install -y $PACKAGES"
             apt-get install -y $PACKAGES
-            dpkg -l | grep unicode-data
+            #dpkg -l | grep unicode-data
             # https://stackoverflow.com/questions/60169752/how-to-update-the-path-in-a-github-action-workflow-file-for-a-windows-latest-hos
             # Should update PATH after gtk3 is installed
-            echo "/usr/lib/x86_64-linux-gnu/libgtk-3-0" >> $GITHUB_PATH
-            file /usr/lib/x86_64-linux-gnu/libgtk-3-0/gtk-query-immodules-3.0
+            #echo "/usr/lib/x86_64-linux-gnu/libgtk-3-0" >> $GITHUB_PATH
+            #file /usr/lib/x86_64-linux-gnu/libgtk-3-0/gtk-query-immodules-3.0
             ;;
           fedora*)
             cat /etc/fedora-release
@@ -205,12 +207,10 @@ jobs:
         run: |
           ls -a
           patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
+          patch -p1 < ./test-fjw/ibus-xx-bus-docker-spawn.patch
           patch -p1 < ./test-fjw/ibus-xx-debug.patch
           gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs glib-2.0`
-          echo "#!/bin/sh" > a.sh
-          echo "echo a" > a.sh
-          chmod a+x a.sh
-          ./testspawn
+          ./testspawn &
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
@@ -238,11 +238,12 @@ jobs:
       - name: Run autogen
         # configure options from
         # https://salsa.debian.org/debian/ibus/-/blob/master/debian/rules
+        #  --with-ucd-dir=${{ matrix.ucd_dir }}
         run: >
           ./autogen.sh
           --enable-gtk-doc
           --with-python=/usr/bin/python3
-          --with-ucd-dir=${{ matrix.ucd_dir }}
+          --with-ucd-dir=/usr/share/unicode
           --enable-install-tests
 
       - name: Run make
@@ -250,6 +251,7 @@ jobs:
         # /home/travis/bulid/fujiwarat/$PKG/ibus/ibus-$VERSION/_inst seems to
         # be too long and failed to set DESTDIR to install
         # bindings/pygobject/IBus.py
+        #  --with-ucd-dir=${{ matrix.ucd_dir }}
         run: >
           export DISABLE_DAEMONIZE_IN_TESTS=1;
           make distcheck
@@ -258,7 +260,7 @@ jobs:
           --disable-schemas-install
           --enable-memconf
           --with-python=/usr/bin/python3
-          --with-ucd-dir=${{ matrix.ucd_dir }}
+          --with-ucd-dir=/usr/share/unicode
           --enable-install-tests
           "
           DISABLE_GUI_TESTS="
