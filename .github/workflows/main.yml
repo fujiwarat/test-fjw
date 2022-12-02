@@ -40,11 +40,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: ["fedora:37", "feodra:38", "ubuntu:jammy"]
+        container: ["fedora:37", "fedora:38", "ubuntu:jammy"]
     steps:
       - name: Check container sha tags
         run: |
           docker pull "${{ matrix.container }}"
+          docker inspect "${{ matrix.container }}" --format=${{ '{{.RepoDigests}}{{.Created}}' }}
 
   # This workflow contains a single job called "build"
   build:
