@@ -33,6 +33,19 @@ jobs:
   #    fedora_development: ${{ steps.distro.outputs.development }}
   #    ubuntu_latest: ${{ steps.distro.outputs.active }}
 
+  # https://github.com/docker-library/repo-info/blob/master/repos/fedora/remote/38.md
+  # docker pull fedora@sha256:TAG
+  versions:
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ["fedora:37", "feodra:38", "ubuntu:jammy"]
+    steps:
+      - name: Check container sha tags
+        run: |
+          docker pull "${{ matrix.container }}"
+          docker inspect "${{ matrix.container }}" --format='{{.RepoDigests}}{{.Created}}'
+
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
@@ -46,10 +59,12 @@ jobs:
       fail-fast: false
       matrix:
         # Need double quotation for colon
-        container: ["fedora:37", "ubuntu:jammy"]
+        #container: ["fedora:37", "ubuntu:jammy"]
         #container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
         include:
           - container: fedora:37
+            ucd_dir: /usr/share/unicode/ucd
+          - container: fedora:38
             ucd_dir: /usr/share/unicode/ucd
           - container: ubuntu:jammy
             ucd_dir: /usr/share/unicode
