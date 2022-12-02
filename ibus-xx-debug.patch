@@ -37,10 +37,10 @@ index ca5285bd..f0a7f6d7 100644
  
  if ENABLE_INSTALL_TESTS
 diff --git a/src/tests/ibus-bus.c b/src/tests/ibus-bus.c
-index a2af0bb2..24ee8d0d 100644
+index a2af0bb2..d68d46ef 100644
 --- a/src/tests/ibus-bus.c
 +++ b/src/tests/ibus-bus.c
-@@ -1,9 +1,11 @@
+@@ -1,6 +1,7 @@
  /* -*- mode: C; c-basic-offset: 4; indent-tabs-mode: nil; -*- */
  
  #include <string.h>
@@ -48,11 +48,7 @@ index a2af0bb2..24ee8d0d 100644
  #include "ibus.h"
  
  static IBusBus *bus;
-+static gboolean test_async_apis_is_finished;
- 
- static void
- print_engines (const GList *engines)
-@@ -41,6 +43,7 @@ test_list_engines (void)
+@@ -41,6 +42,7 @@ test_list_engines (void)
      GList *engines;
      IBUS_TYPE_ENGINE_DESC;
  
@@ -60,7 +56,7 @@ index a2af0bb2..24ee8d0d 100644
      engines = ibus_bus_list_engines (bus);
      print_engines (engines);
  
-@@ -802,6 +805,30 @@ start_set_preload_engines_async (void)
+@@ -802,6 +804,32 @@ start_set_preload_engines_async (void)
              NULL); /* user_data */
  }
  
@@ -85,13 +81,15 @@ index a2af0bb2..24ee8d0d 100644
 +        break;
 +    default:
 +        fprintf (stderr, "socket file is %d\n", event_type);
++        g_warning ("socket file is %d", event_type);
++        g_assert (event_type == G_FILE_MONITOR_EVENT_CREATED);
 +    }
 +}
 +
  static void
  finish_exit_async (GObject *source_object,
                     GAsyncResult *res,
-@@ -811,15 +838,25 @@ finish_exit_async (GObject *source_object,
+@@ -811,15 +839,25 @@ finish_exit_async (GObject *source_object,
      gboolean result = ibus_bus_exit_async_finish (bus,
                                                    res,
                                                    &error);
@@ -120,7 +118,7 @@ index a2af0bb2..24ee8d0d 100644
      /* When `./runtest ibus-bus` runs, ibus-daemon sometimes failed to
       * restart because closing a file descriptor was failed in
       * bus/server.c:_restart_server() with a following error:
-@@ -827,22 +864,47 @@ start_exit_async (void)
+@@ -827,18 +865,42 @@ start_exit_async (void)
       * Now g_usleep() is added here to write down the buffer and not to
       * fail to restart ibus-daemon.
       */
@@ -160,24 +158,11 @@ index a2af0bb2..24ee8d0d 100644
  static gboolean
  test_async_apis_finish (gpointer user_data)
  {
-+    g_debug ("test test_async_apis_finish %d", test_async_apis_is_finished);
++    g_debug ("test test_async_apis_finish");
      /* INFO: g_warning() causes SEGV with runtest script */
      if (ibus_get_address () == NULL)
          g_warning ("ibus-daemon does not restart yet from start_exit_async().");
-     ibus_quit ();
-+    test_async_apis_is_finished = TRUE;
-     return FALSE;
- }
- 
-@@ -884,6 +946,7 @@ static void
- test_async_apis (void)
- {
-     g_debug ("start");
-+    test_async_apis_is_finished = FALSE;
-     call_next_async_function ();
-     ibus_main ();
- }
-@@ -920,9 +983,10 @@ call_next_async_function (void)
+@@ -920,9 +982,10 @@ call_next_async_function (void)
      /* Use g_timeout_add to make sure test_async_apis finishes even if
       * async_functions is empty.
       */
@@ -190,23 +175,20 @@ index a2af0bb2..24ee8d0d 100644
          (*async_functions[index++])();
  }
  
-@@ -931,16 +995,29 @@ _bus_connected_cb (IBusBus *bus,
+@@ -930,17 +993,30 @@ static void
+ _bus_connected_cb (IBusBus *bus,
                     gpointer user_data)
  {
++    fprintf (stderr, "test _bus_connected_cb %s\n", ibus_bus_is_connected (bus) ? "TRUE" : "FALSE");
      g_assert (ibus_bus_is_connected (bus));
-+    g_debug ("test _bus_connected_cb");
      ibus_quit ();
-+    fprintf (stderr, "test2 test_bus_new_async callback %s\n", ibus_bus_is_connected (bus) ? "TRUE" : "FALSE");
++    fprintf (stderr, "test _bus_connected_cb\n");
  }
  
  static void
  test_bus_new_async (void)
  {
 +    int count = 0;
-+    while (!test_async_apis_is_finished) {
-+        fprintf (stderr, "test test_bus_new_async %d\n", count++);
-+        g_usleep (G_USEC_PER_SEC);
-+    }
      g_object_unref (bus);
 +    fprintf (stderr, "test2 test_bus_new_async\n");
 +    //if (system ("/usr/bin/ps -ef | /usr/bin/grep ibus"))
@@ -215,6 +197,10 @@ index a2af0bb2..24ee8d0d 100644
      bus = ibus_bus_new_async ();
      g_signal_connect (bus, "connected", G_CALLBACK (_bus_connected_cb), NULL);
 +    fprintf (stderr, "test3 test_bus_new_async %s %p\n", ibus_get_address (), bus);
++    while (count < 1000000) {
++        fprintf (stderr, "test test_bus_new_async %d\n", count++);
++        g_usleep (G_USEC_PER_SEC);
++    }
      ibus_main ();
 +    fprintf (stderr, "test4 test_bus_new_async\n");
  }
