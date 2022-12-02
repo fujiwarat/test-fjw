@@ -197,21 +197,23 @@ jobs:
           git fetch --prune --unshallow --tags
           echo $PATH
 
-      - uses: actions/checkout@v2
-        name: Fetch Additional patches
-        with:
-          repository: fujiwarat/test-fjw
-          path: test-fjw
+      #- uses: actions/checkout@v2
+      #  name: Fetch Additional patches
+      #  with:
+      #    repository: fujiwarat/test-fjw
+      #    path: test-fjw
 
       - name: Apply additional patches
         run: |
           ls -a
-          patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
-          patch -p1 < ./test-fjw/ibus-xx-tests-restart-bus.patch
-          patch -p1 < ./test-fjw/ibus-xx-bus-docker-spawn.patch
+          #patch -p1 < ./test-fjw/ibus-xx-tests-gtk-query-ubuntu.patch
+          #patch -p1 < ./test-fjw/ibus-xx-tests-restart-bus.patch
+          #patch -p1 < ./test-fjw/ibus-xx-bus-docker-spawn.patch
           #patch -p1 < ./test-fjw/ibus-xx-debug.patch
           #gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs glib-2.0`
           #./testspawn &
+          wget -O ibus-xx-bus-docker-spawn.patch https://github.com/fujiwarat/ibus/commit/d7d9247f517dbee97be551555f6abda3aa57dd39.patch
+          patch -p1 < ./test-fjw/ibus-xx-bus-docker-spawn.patch
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
