@@ -215,7 +215,7 @@ jobs:
           #gcc -o testspawn test-fjw/testspawn.c `pkg-config --cflags --libs glib-2.0`
           #./testspawn &
           wget -O ibus-xx-bus-docker-spawn.patch https://github.com/fujiwarat/ibus/commit/d7d9247f517dbee97be551555f6abda3aa57dd39.patch
-          patch -p1 < ./test-fjw/ibus-xx-bus-docker-spawn.patch
+          patch -p1 < ./ibus-xx-bus-docker-spawn.patch
 
       # list from string array
       # https://github.com/marketplace/actions/create-list-from-string-array
