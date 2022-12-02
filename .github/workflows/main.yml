@@ -68,6 +68,7 @@ jobs:
          UBUNTU_PACKAGES_AUTOGEN: >
            autopoint
            strace
+           wget
          # For make from
          # https://packages.ubuntu.com/search?searchon=sourcenames&keywords=ibus
          UBUNTU_PACKAGES_MAKE: >
@@ -127,6 +128,7 @@ jobs:
            xkeyboard-config-devel
            patch
            strace
+           wget
 
         run: |
           #echo "fedora {{ fromJson(needs.get_distro.outputs.fedora_latest) }}"
