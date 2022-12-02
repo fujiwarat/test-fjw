@@ -1,6 +1,6 @@
-From ff097b6f86b8c2c7391f9291609fe08e913ff2f5 Mon Sep 17 00:00:00 2001
+From 69f24d845120a79190a8e90b268b44f7e15705bc Mon Sep 17 00:00:00 2001
 From: fujiwarat <takao.fujiwara1@gmail.com>
-Date: Mon, 21 Nov 2022 23:42:53 +0900
+Date: Fri, 2 Dec 2022 13:41:53 +0900
 Subject: [PATCH] bus: Add bus_component_check for GitHub action + Docker
 
 Currently g_spawn_async() is failed in GitHub action + Docker, which
