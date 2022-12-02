@@ -36,6 +36,7 @@ jobs:
   # https://github.com/docker-library/repo-info/blob/master/repos/fedora/remote/38.md
   # docker pull fedora@sha256:TAG
   versions:
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
