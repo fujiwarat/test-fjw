@@ -45,7 +45,6 @@ jobs:
       - name: Check container sha tags
         run: |
           docker pull "${{ matrix.container }}"
-          docker inspect "${{ matrix.container }}" --format='{{.RepoDigests}}{{.Created}}'
 
   # This workflow contains a single job called "build"
   build:
@@ -60,7 +59,7 @@ jobs:
       fail-fast: false
       matrix:
         # Need double quotation for colon
-        #container: ["fedora:37", "ubuntu:jammy"]
+        #container: ["fedora:37", "fedora:38", "ubuntu:jammy"]
         #container: ["fedora/fedora:37-x86_64", "ubuntu/ubuntu:jammy-aarch64"]
         include:
           - container: fedora:37
