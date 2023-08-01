@@ -36,44 +36,41 @@ check_commit_message()
 {
     ID=$1
     # Check files in the current branch only but not cached commits
-    git log --pretty=oneline | grep $ID || {
-        echo >&2 Invalid commit ID: $ID
+    git log --pretty=oneline | grep -q "$ID" || {
+        echo >&2 "Invalid commit ID: $ID"
         exit 1
     }
 }
 
 THIS_FILE="$0"
-if ! diff $THIS_FILE .github/hooks/$(basename $THIS_FILE) ; then
+diff $THIS_FILE .github/hooks/$(basename $THIS_FILE) || {
     echo >&2 "$THIS_FILE is older than .github/hooks/$(basename $THIS_FILE)"
     exit 1
-fi
-
-test "" = "$(grep '^Signed-off-by: ' "$1" |
-	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
-	echo >&2 Duplicate Signed-off-by lines.
-	exit 1
 }
 
-IDs=$(grep '^Fixes: ' "$1" | awk '{print $2}')
-if test x"$IDs" != x ; then
-    for ID in $IDs
-    do
-        if echo "$ID" | grep -q "^http" ; then
-            if echo $ID | grep -q "$REPO/commit/" ; then
-                ID=$(basename $ID)
-                check_commit_message $ID
-            fi
-        else
-            check_commit_message $ID
-        fi
-    done
-fi
+test "" = "$(grep '^Signed-off-by: ' "$1" |
+    sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
+    echo >&2 Duplicate Signed-off-by lines.
+    exit 1
+}
 
-if head -1 "$1" | grep '^Release ' ; then
+for ID in $(grep '^Fixes: ' "$1" | awk '{print $2}')
+do
+    echo "$ID" | grep -q "^http" && {
+        echo $ID | grep -q "$REPO/commit/" && {
+            ID=$(basename $ID)
+            check_commit_message $ID
+        } || :
+    } || {
+        check_commit_message $ID
+    }
+done
+
+head -1 "$1" | grep '^Release ' && {
     FILES=$(grep "Since: $TMP_VER" $(git ls-files))
     if test x"$FILES" != x ; then
         echo >&2 "You need to replace $TMP_VER with the releasing version"
         echo >&2 "$FILES"
         exit 1
     fi
-fi
+} || :
