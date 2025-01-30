@@ -12,7 +12,7 @@ body:
     attributes:
       value: "Wrong title - \"ibus typing not work with any applications\".
         Good title - \"Cannot output multi-byte strings with gedit\" or
-        \"Cannot switch keyboard layout with Super-space in Wayland\" or
+        \"Cannot switch keyboard layouts with Super-space in Wayland\" or
         \"String output is slow with firefox in Cinnamon\""
   - type: input
     id: distro
