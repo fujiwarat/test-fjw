@@ -15,7 +15,7 @@ body:
       description: Which distribusion and version? Check /etc/fedora-release
       placeholder: Fedora 41
     validations:
-      required: false
+      required: true
   - type: input
     id: desktop
     attributes:
@@ -25,7 +25,7 @@ body:
         Check $XDG_CURRENT_DESKTOP and your ISO image.
       placeholder: GNOME 3.24
     validations:
-      required: false
+      required: true
   - type: dropdown
     id: session
     attributes:
@@ -34,6 +34,7 @@ body:
       options:
         - Wayland
         - X11
+      default: 0
     validations:
       required: true
   - type: input
@@ -43,7 +44,7 @@ body:
       description: Which application and version?
       placeholder: gedit 3.24, leafpad, kate, xterm
     validations:
-      required: false
+      required: true
   - type: input
     id: version
     attributes:
@@ -51,7 +52,7 @@ body:
       description: Run `ibus version`
       placeholder: 1.5.31
     validations:
-      required: false
+      required: true
   - type: textarea
     id: description
     attributes:
@@ -71,7 +72,7 @@ body:
         3. 
       render: bash
     validations:
-      required: false
+      required: true
   - type: textarea
     id: inevitability
     attributes:
@@ -81,7 +82,7 @@ body:
         Please answer "yes" or "no" and also complement your issue as needed.
         Run `ibus exit` and `ibus-daemon --xim &`
     validations:
-      required: false
+      required: true
   - type: textarea
     id: error_messages
     attributes:
@@ -90,6 +91,7 @@ body:
       description: |
         Run `ibus-daemon --xim --verbose &` and look at the output when you
         encounter your problem.
+        You might need to run `journalctl` for GNOME sessions.
     validations:
       required: false
   - type: textarea
@@ -100,5 +102,12 @@ body:
         current your account? (yes / no)
       description: |
         Please answer "yes" or "no" and also complement your issue as needed.
+    validations:
+      required: true
+  - type: textarea
+    id: note
+    attributes:
+      label: |
+        Add any other context about the problem here.
     validations:
       required: false
