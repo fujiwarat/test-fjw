@@ -13,3 +13,5 @@ body:
       label: Distribution and Version
       description: Which distribusion and version?: 
       placeholder: E.g. Fedora 27. Check /etc/fedora-release
+    validations:
+      required: false
