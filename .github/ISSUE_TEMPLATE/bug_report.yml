@@ -53,14 +53,14 @@ body:
       placeholder: 1.5.31
     validations:
       required: false
-  - type: texarea
+  - type: textarea
     id: description
     attributes:
       label: Issue Description
       description: Please describe the issue summary.
     validations:
       required: false
-  - type: texarea
+  - type: textarea
     id: reproducing
     attributes:
       label: Steps to Reproduce
@@ -73,7 +73,7 @@ body:
       render: bash
     validations:
       required: false
-  - type: texarea
+  - type: textarea
     id: inevitability
     attributes:
       label: |
@@ -83,7 +83,7 @@ body:
         Run `ibus exit` and `ibus-daemon --xim &`
     validations:
       required: false
-  - type: texarea
+  - type: textarea
     id: error_messages
     attributes:
       label: |
@@ -93,7 +93,7 @@ body:
         encounter your problem.
     validations:
       required: false
-  - type: texarea
+  - type: textarea
     id: error_config
     attributes:
       label: |
