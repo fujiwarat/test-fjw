@@ -34,7 +34,6 @@ body:
       options:
         - Wayland
         - X11
-      default: 0
     validations:
       required: true
   - type: input
