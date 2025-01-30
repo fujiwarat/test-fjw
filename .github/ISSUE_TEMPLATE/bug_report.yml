@@ -1,17 +1,105 @@
-name: Bus Report
-description: Please fill in the following items if you don't know the root cause.
+name: Bus Report Template
+description: |
+  Please fill in the following items if you don't know the root cause.
 assignees:
   - fujiwarat
 body:
   - type: markdown
     attributes:
       value: |
-        test.
+        Please fill in the following items if you don't know the root cause.
   - type: input
     id: distro
     attributes:
       label: Distribution and Version
-      description: Which distribusion and version?
-      placeholder: E.g. Fedora 27. Check /etc/fedora-release
+      description: Which distribusion and version? Check /etc/fedora-release
+      placeholder: Fedora 41
+    validations:
+      required: false
+  - type: input
+    id: desktop
+    attributes:
+      label: Desktop Environment and Version
+      description: |
+        Which desktop environment and version?
+        Check $XDG_CURRENT_DESKTOP and your ISO image.
+      placeholder: GNOME 3.24
+    validations:
+      required: false
+  - type: dropdown
+    id: session
+    attributes:
+      label: Session Type
+      description: Which session type? Check $XDG_SESSION_TYPE
+      options:
+        - Wayland
+        - X11
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: application
+    attributes:
+      label: Application and Version
+      description: Which application and version?
+      placeholder: gedit 3.24, leafpad, kate, xterm
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: IBus version
+      description: Run `ibus version`
+      placeholder: 1.5.31
+    validations:
+      required: false
+  - type: texarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Please describe the issue summary.
+    validations:
+      required: false
+  - type: texarea
+    id: reproducing
+    attributes:
+      label: Steps to Reproduce
+      description: |
+        How do you trigger this bug? Please walk us through it step by step.
+      value: |
+        1. 
+        2. 
+        3. 
+      render: bash
+    validations:
+      required: false
+  - type: texarea
+    id: inevitability
+    attributes:
+      label: |
+        Can you reproduce your problem when you restart ibus-daemon? (yes / no)
+      description: |
+        Please answer "yes" or "no" and also complement your issue as needed.
+        Run `ibus exit` and `ibus-daemon --xim &`
+    validations:
+      required: false
+  - type: texarea
+    id: error_messages
+    attributes:
+      label: |
+        Do you see any errors when you run ibus-daemon with the verbose option?
+      description: |
+        Run `ibus-daemon --xim --verbose &` and look at the output when you
+        encounter your problem.
+    validations:
+      required: false
+  - type: texarea
+    id: error_config
+    attributes:
+      label: |
+        Can you reproduce your problem with a new user account instead of the
+        current your account? (yes / no)
+      description: |
+        Please answer "yes" or "no" and also complement your issue as needed.
     validations:
       required: false
