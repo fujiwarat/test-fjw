@@ -7,7 +7,12 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please fill in the following items if you don't know the root cause.
+        Please describe the issue title to be able to identify your issue
+        against others.
+        Wrong title - "ibus typing not work with any applications".
+        Good title - "Cannot output multi-byte strings with gedit" or
+        "Cannot switch keyboard layout with Super-space in Wayland" or
+        "String output is slow with firefox in Cinnamon"
   - type: input
     id: distro
     attributes:
